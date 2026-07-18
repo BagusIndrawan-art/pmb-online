@@ -7,3 +7,17 @@
 2026-07-19 01:05:21,898 - INFO - 127.0.0.1 - - [19/Jul/2026 01:05:21] "GET /api?action=check_session HTTP/1.1" 200 -
 2026-07-19 01:06:23,688 - INFO - 127.0.0.1 - - [19/Jul/2026 01:06:23] "GET /api?action=check_session HTTP/1.1" 200 -
 2026-07-19 01:06:25,139 - INFO - 127.0.0.1 - - [19/Jul/2026 01:06:25] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:06:41,319 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-19 01:06:41,319 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-19 01:06:41,319 - INFO -  * Restarting with stat
+2026-07-19 01:06:41,650 - WARNING -  * Debugger is active!
+2026-07-19 01:06:41,666 - INFO -  * Debugger PIN: 243-459-840
+2026-07-19 01:07:01,175 - INFO - 127.0.0.1 - - [19/Jul/2026 01:07:01] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:07:01,646 - INFO - 127.0.0.1 - - [19/Jul/2026 01:07:01] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:07:40,618 - INFO - 127.0.0.1 - - [19/Jul/2026 01:07:40] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:10:22,635 - INFO - 127.0.0.1 - - [19/Jul/2026 01:10:22] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:11:18,597 - INFO - 127.0.0.1 - - [19/Jul/2026 01:11:18] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:13:10,622 - INFO - 127.0.0.1 - - [19/Jul/2026 01:13:10] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:13:26,181 - INFO - 127.0.0.1 - - [19/Jul/2026 01:13:26] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:15:32,862 - INFO - 127.0.0.1 - - [19/Jul/2026 01:15:32] "GET /api?action=check_session HTTP/1.1" 200 -
