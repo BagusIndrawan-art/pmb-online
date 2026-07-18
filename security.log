@@ -196,3 +196,54 @@
 2026-07-19 01:30:34,435 - INFO - 127.0.0.1 - - [19/Jul/2026 01:30:34] "GET /api?action=check_session HTTP/1.1" 200 -
 2026-07-19 01:30:34,830 - INFO - 127.0.0.1 - - [19/Jul/2026 01:30:34] "GET /api?action=check_session HTTP/1.1" 200 -
 2026-07-19 01:30:35,241 - INFO - 127.0.0.1 - - [19/Jul/2026 01:30:35] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:30:35,646 - INFO - 127.0.0.1 - - [19/Jul/2026 01:30:35] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:30:50,388 - INFO - 127.0.0.1 - - [19/Jul/2026 01:30:50] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:32:42,887 - INFO - 127.0.0.1 - - [19/Jul/2026 01:32:42] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:32:43,305 - INFO - 127.0.0.1 - - [19/Jul/2026 01:32:43] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:32:43,623 - INFO - 127.0.0.1 - - [19/Jul/2026 01:32:43] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:32:44,054 - INFO - 127.0.0.1 - - [19/Jul/2026 01:32:44] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:32:44,409 - INFO - 127.0.0.1 - - [19/Jul/2026 01:32:44] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:32:44,921 - INFO - 127.0.0.1 - - [19/Jul/2026 01:32:44] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:32:45,330 - INFO - 127.0.0.1 - - [19/Jul/2026 01:32:45] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:32:45,742 - INFO - 127.0.0.1 - - [19/Jul/2026 01:32:45] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:37:33,421 - INFO - 127.0.0.1 - - [19/Jul/2026 01:37:33] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:38:00,013 - INFO - 127.0.0.1 - - [19/Jul/2026 01:38:00] "POST /api HTTP/1.1" 200 -
+2026-07-19 01:38:13,739 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-19 01:38:13,739 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-19 01:38:13,741 - INFO -  * Restarting with stat
+2026-07-19 01:38:14,376 - WARNING -  * Debugger is active!
+2026-07-19 01:38:14,400 - INFO -  * Debugger PIN: 243-459-840
+2026-07-19 01:38:23,691 - INFO - 127.0.0.1 - - [19/Jul/2026 01:38:23] "POST /api HTTP/1.1" 200 -
+2026-07-19 01:38:29,232 - INFO - 127.0.0.1 - - [19/Jul/2026 01:38:29] "POST /api HTTP/1.1" 200 -
+2026-07-19 01:40:12,419 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-19 01:40:12,419 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-19 01:40:12,419 - INFO -  * Restarting with stat
+2026-07-19 01:40:12,776 - WARNING -  * Debugger is active!
+2026-07-19 01:40:12,797 - INFO -  * Debugger PIN: 243-459-840
+2026-07-19 01:44:27,204 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-19 01:44:27,204 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-19 01:44:27,206 - INFO -  * Restarting with stat
+2026-07-19 01:44:27,571 - WARNING -  * Debugger is active!
+2026-07-19 01:44:27,589 - INFO -  * Debugger PIN: 243-459-840
+2026-07-19 01:44:44,405 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-19 01:44:44,405 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-19 01:44:44,407 - INFO -  * Restarting with stat
+2026-07-19 01:44:44,732 - WARNING -  * Debugger is active!
+2026-07-19 01:44:44,748 - INFO -  * Debugger PIN: 243-459-840
+2026-07-19 01:47:22,321 - INFO - 127.0.0.1 - - [19/Jul/2026 01:47:22] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:47:43,439 - INFO - 127.0.0.1 - - [19/Jul/2026 01:47:43] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:47:56,634 - INFO - 127.0.0.1 - - [19/Jul/2026 01:47:56] "POST /api HTTP/1.1" 200 -
+2026-07-19 01:48:10,295 - INFO - 127.0.0.1 - - [19/Jul/2026 01:48:10] "POST /api HTTP/1.1" 200 -
+2026-07-19 01:48:30,695 - INFO - 127.0.0.1 - - [19/Jul/2026 01:48:30] "POST /api HTTP/1.1" 200 -
+2026-07-19 01:48:45,623 - INFO - 127.0.0.1 - - [19/Jul/2026 01:48:45] "POST /api HTTP/1.1" 200 -
+2026-07-19 01:48:46,297 - INFO - 127.0.0.1 - - [19/Jul/2026 01:48:46] "POST /api HTTP/1.1" 200 -
+2026-07-19 01:48:46,852 - INFO - 127.0.0.1 - - [19/Jul/2026 01:48:46] "POST /api HTTP/1.1" 200 -
+2026-07-19 01:48:47,304 - INFO - 127.0.0.1 - - [19/Jul/2026 01:48:47] "POST /api HTTP/1.1" 200 -
+2026-07-19 01:49:22,979 - INFO -  * Detected change in 'C:\\xampp\\htdocs\\pmb-online\\app.py', reloading
+2026-07-19 01:49:23,015 - INFO -  * Restarting with stat
+2026-07-19 01:49:23,424 - WARNING -  * Debugger is active!
+2026-07-19 01:49:23,443 - INFO -  * Debugger PIN: 243-459-840

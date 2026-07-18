@@ -22,7 +22,11 @@ logging.basicConfig(filename='security.log', level=logging.INFO,
 
 # --- KONFIGURASI CORS ---
 # Izinkan akses HANYA dari URL GitHub Pages kamu
-CORS(app, supports_credentials=True, origins=["https://bagusindrawan-art.github.io"])
+CORS(app, supports_credentials=True, origins=[
+    "https://bagusindrawan-art.github.io", 
+    "http://127.0.0.1:5500", 
+    "http://localhost:5500"
+])
 
 def get_db_connection():
     try:
