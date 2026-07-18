@@ -247,3 +247,11 @@
 2026-07-19 01:49:23,015 - INFO -  * Restarting with stat
 2026-07-19 01:49:23,424 - WARNING -  * Debugger is active!
 2026-07-19 01:49:23,443 - INFO -  * Debugger PIN: 243-459-840
+2026-07-19 01:50:43,361 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-07-19 01:50:43,361 - INFO - [33mPress CTRL+C to quit[0m
+2026-07-19 01:50:43,366 - INFO -  * Restarting with stat
+2026-07-19 01:50:43,895 - WARNING -  * Debugger is active!
+2026-07-19 01:50:43,916 - INFO -  * Debugger PIN: 243-459-840
+2026-07-19 01:50:48,015 - INFO - 127.0.0.1 - - [19/Jul/2026 01:50:48] "GET /api?action=check_session HTTP/1.1" 200 -
+2026-07-19 01:50:48,068 - INFO - 127.0.0.1 - - [19/Jul/2026 01:50:48] "GET /api?action=get_user_application HTTP/1.1" 200 -

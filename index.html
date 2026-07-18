@@ -718,9 +718,9 @@
         // Inisialisasi AOS (Animasi Scroll)
         AOS.init({ once: true, offset: 50 });
 
-        let API_URL = 'http://127.0.0.1:5000/api';
+        let API_URL = 'https://bagusidrwn311.pythonanywhere.com/api';
         if (window.location.protocol === 'blob:') {
-            API_URL = 'http://127.0.0.1:5000/api';
+            API_URL = 'https://bagusidrwn311.pythonanywhere.com/api';
         }
 
         const fetchConfig = (options = {}) => ({
