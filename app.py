@@ -7,15 +7,16 @@ import os
 import logging
 import datetime
 import html
+import re
+import random
 
 app = Flask(__name__)
-# Secret key untuk manajemen sesi
 app.secret_key = 'super_secret_pmb_key_2026'
 
-# --- KONFIGURASI KEAMANAN KHUSUS UNTUK ONLINE (GITHub Pages) ---
+# --- KONFIGURASI KEAMANAN KHUSUS UNTUK ONLINE (GitHub Pages) ---
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
-app.config['SESSION_COOKIE_HTTPONLY'] = True  
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # Mencegah pencurian XSS
 
 # KONTROL 8: Logging & Monitoring
 logging.basicConfig(filename='security.log', level=logging.INFO, 
@@ -30,12 +31,14 @@ CORS(app, supports_credentials=True, origins=[
 
 def get_db_connection():
     try:
+        # Menggunakan SQLite. Penyesuaian parameter URI untuk kompatibilitas x86 (driver 32-bit).
         db_path = os.path.join(os.path.dirname(__file__), 'pmb_online.db')
-        conn = sqlite3.connect(db_path)
+        conn = sqlite3.connect(f"file:{db_path}?mode=rwc", uri=True)
+        
         conn.row_factory = sqlite3.Row 
         cursor = conn.cursor()
         
-        # Tabel Users
+        # Pembuatan tabel users
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,7 +52,7 @@ def get_db_connection():
             )
         """)
         
-        # Tabel Applications (PMB)
+        # Pembuatan tabel applications
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS applications (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -82,20 +85,29 @@ def get_db_connection():
             )
         """)
         
-        # --- SEEDING AKUN OPERATOR DEFAULT ---
-        # Membuat akun operator otomatis jika belum ada di database
+        # Buat akun IT Support (Super Operator) otomatis jika belum ada di dalam database
         cursor.execute("SELECT id FROM users WHERE email = 'operator@univ.ac.id'")
         if not cursor.fetchone():
-            hashed_op_pw = generate_password_hash('operator123')
-            cursor.execute("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
-                           ('Super Operator', 'operator@univ.ac.id', hashed_op_pw, 'operator'))
-                           
+            hashed_pw = generate_password_hash('operator123')
+            cursor.execute("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)", 
+                           ('Super Operator (IT Support)', 'operator@univ.ac.id', hashed_pw, 'operator'))
+            
         conn.commit()
         return conn, cursor
     except sqlite3.Error as err:
         print(f"Error Database: {err}")
         return None, None
 
+# --- RUTE HALAMAN UTAMA (Agar tidak Error 404 saat dibuka) ---
+@app.route('/', methods=['GET'])
+def index_route():
+    return jsonify({
+        "status": "Online",
+        "message": "Server API PMB Universitas Modern Berjalan Normal.",
+        "endpoints": "/api"
+    })
+
+# --- RUTE UTAMA HANDLER API ---
 @app.route('/api', methods=['GET', 'POST'])
 def api_handler():
     action = request.args.get('action') if request.method == 'GET' else request.form.get('action')
@@ -105,6 +117,7 @@ def api_handler():
         return jsonify({"success": False, "message": "Gagal membaca database SQLite."}), 500
 
     try:
+        # 1. Cek Sesi
         if action == 'check_session':
             if 'user_id' in session:
                 return jsonify({
@@ -117,10 +130,12 @@ def api_handler():
                 })
             return jsonify({"success": False, "message": "Belum ada sesi aktif."})
 
+        # 2. Logout
         elif action == 'logout':
             session.clear()
             return jsonify({"success": True, "message": "Anda telah keluar sistem."})
 
+        # 3. Registrasi
         elif action == 'register':
             name = request.form.get('name', '').strip()
             email = request.form.get('email', '').strip()
@@ -130,6 +145,12 @@ def api_handler():
             if not name or not email or not password:
                 return jsonify({"success": False, "message": "Data tidak lengkap."})
                 
+            # Validasi Password Kuat (Backend Regex)
+            if len(password) < 8 or not re.search(r'[A-Z]', password) or not re.search(r'[a-z]', password) or not re.search(r'\d', password) or not re.search(r'[@$!%*?&#]', password):
+                logging.warning(f"Registration Failed: {email} mencoba mendaftar dengan password lemah.")
+                return jsonify({"success": False, "message": "Password tidak memenuhi standar keamanan (Harus Kombinasi Huruf Besar, Kecil, Angka, dan Simbol)."})
+            
+            # Map checkbox form ke Role 'Admin Area' (disimpan sebagai 'admin') atau 'user'
             role = 'admin' if is_admin else 'user'
             hashed_pw = generate_password_hash(password)
             
@@ -141,6 +162,7 @@ def api_handler():
             except sqlite3.IntegrityError:
                 return jsonify({"success": False, "message": "Email sudah terdaftar."})
 
+        # 4. Login (Brute-Force Protection + MFA/OTP)
         elif action == 'login':
             email = request.form.get('email', '').strip()
             password = request.form.get('password', '')
@@ -149,21 +171,31 @@ def api_handler():
             user = cursor.fetchone()
             
             if user:
-                # KONTROL 1: Sistem Lockout & Password Hashing
+                # Cek masa Lockout
                 if user['locked_until'] and datetime.datetime.strptime(user['locked_until'], '%Y-%m-%d %H:%M:%S') > datetime.datetime.now():
                     logging.warning(f"Brute-Force Terblokir: Akun {email} mencoba login saat masa lockout.")
                     return jsonify({"success": False, "message": "Akun terkunci karena terlalu banyak percobaan gagal. Silakan coba 15 menit lagi."})
 
                 if check_password_hash(user['password'], password):
+                    # Reset failed attempts jika password benar
                     cursor.execute("UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE email = ?", (email,))
                     conn.commit()
                     
-                    session['user_id'] = user['id']
-                    session['name'] = user['name']
-                    session['role'] = user['role']
-                    logging.info(f"Login Sukses: User {email} (Role: {user['role']})")
-                    return jsonify({"success": True, "message": "Login berhasil!", "data": {"name": user['name'], "role": user['role']}})
+                    # Buat Kode OTP 6-Digit (Multi-Factor Authentication)
+                    otp_code = str(random.randint(100000, 999999))
+                    session['pending_user'] = {'id': user['id'], 'name': user['name'], 'role': user['role']}
+                    session['pending_otp'] = otp_code
+                    
+                    print(f"\n{'='*50}\n[MFA OTP] Kode Verifikasi untuk {email} adalah: {otp_code}\n{'='*50}\n")
+                    logging.info(f"MFA OTP dikirimkan untuk {email} adalah: {otp_code}")
+                    
+                    return jsonify({
+                        "success": True, 
+                        "mfa_required": True, 
+                        "message": "Kode OTP 6 Digit telah dikirimkan. (Cek Terminal Python/Log)"
+                    })
                 else:
+                    # Increment failed attempts jika password salah
                     attempts = user['failed_attempts'] + 1
                     locked_until = None
                     if attempts >= 3: 
@@ -176,6 +208,27 @@ def api_handler():
                     
             return jsonify({"success": False, "message": "Email atau Password salah."})
 
+        # 5. Verifikasi MFA (OTP Checker)
+        elif action == 'verify_mfa':
+            user_otp = request.form.get('otp', '').strip()
+            
+            if 'pending_otp' in session and session['pending_otp'] == user_otp:
+                # OTP Valid, berikan session sesungguhnya
+                session['user_id'] = session['pending_user']['id']
+                session['name'] = session['pending_user']['name']
+                session['role'] = session['pending_user']['role']
+                
+                # Buang sesi temporary
+                session.pop('pending_otp', None)
+                session.pop('pending_user', None)
+                
+                logging.info(f"MFA Sukses & Login Selesai: User ID {session['user_id']}")
+                return jsonify({"success": True, "message": "Autentikasi berhasil!"})
+            else:
+                logging.warning("MFA Gagal: Kode OTP salah dimasukkan.")
+                return jsonify({"success": False, "message": "Kode OTP tidak valid atau kadaluarsa."})
+
+        # 6. Mengambil Formulir Biodata Pendaftar (Regular User)
         elif action == 'get_user_application':
             if session.get('role') != 'user':
                 return jsonify({"success": False, "message": "Akses ditolak."})
@@ -185,13 +238,14 @@ def api_handler():
             
             if app_data:
                 app_dict = dict(app_data)
+                # Masking NIK sebagai bentuk proteksi data
                 raw_nik = app_dict['nik']
                 if len(raw_nik) >= 16:
                     app_dict['nik'] = f"{raw_nik[:4]}********{raw_nik[-4:]}"
-                    
                 return jsonify({"success": True, "data": app_dict})
             return jsonify({"success": False, "message": "Belum ada pendaftaran."})
 
+        # 7. Menyimpan Formulir Pendaftaran dan Dokumen (Upload)
         elif action == 'submit_pmb':
             if session.get('role') != 'user':
                 return jsonify({"success": False, "message": "Sesi kedaluwarsa."})
@@ -200,7 +254,7 @@ def api_handler():
             if cursor.fetchone():
                 return jsonify({"success": False, "message": "Anda sudah mendaftar sebelumnya."})
                 
-            # Validasi input
+            # Sanitasi input (XSS Protection)
             nik = html.escape(request.form.get('nik', '').strip())
             phone = html.escape(request.form.get('phone', '').strip())
             prodi = html.escape(request.form.get('prodi', '').strip())
@@ -221,16 +275,15 @@ def api_handler():
             pek_wali = html.escape(request.form.get('pekerjaan_wali', '').strip())
             gaji_wali = html.escape(request.form.get('gaji_wali', '').strip())
             
+            # File Upload Handler
             def process_file(f):
                 if f and f.filename:
                     allowed_mimes = ['image/jpeg', 'image/png', 'application/pdf']
-                    if f.mimetype not in allowed_mimes:
-                        return "invalid_type"
-                        
+                    if f.mimetype not in allowed_mimes: return "invalid_type"
+                    
                     file_bytes = f.read()
-                    if len(file_bytes) > 2097152: 
-                        return "too_large"
-                        
+                    if len(file_bytes) > 2097152: return "too_large" # Max 2MB
+                    
                     mime_type = f.mimetype
                     b64 = base64.b64encode(file_bytes).decode('utf-8')
                     return f"data:{mime_type};base64,{b64}"
@@ -242,7 +295,7 @@ def api_handler():
             kk_b64 = process_file(request.files.get('kk'))
 
             if not photo_b64 or not ijazah_b64 or not akta_b64 or not kk_b64:
-                return jsonify({"success": False, "message": "Semua berkas (Foto, Ijazah, Akta, KK) wajib diunggah."})
+                return jsonify({"success": False, "message": "Semua berkas wajib diunggah."})
 
             if "invalid_type" in [photo_b64, ijazah_b64, akta_b64, kk_b64]:
                 return jsonify({"success": False, "message": "Tipe file tidak diizinkan. Hanya menerima JPG, PNG, atau PDF."})
@@ -261,12 +314,12 @@ def api_handler():
                   photo_b64, ijazah_b64, akta_b64, kk_b64))
             
             conn.commit()
-            return jsonify({"success": True, "message": "Formulir pendaftaran beserta berkas berhasil disimpan!"})
+            return jsonify({"success": True, "message": "Formulir pendaftaran berhasil disimpan!"})
 
+        # 8. Menarik Seluruh Data Aplikasi (Role Admin Area & IT Support)
         elif action == 'get_all_applications':
-            # KONTROL Otorisasi: Admin & Operator punya akses
             if session.get('role') not in ['admin', 'operator']:
-                return jsonify({"success": False, "message": "Akses khusus admin atau operator."})
+                return jsonify({"success": False, "message": "Akses ditolak."})
                 
             cursor.execute("""
                 SELECT a.id, a.nik, a.phone, a.prodi, a.photo, a.status, u.name, u.email 
@@ -280,12 +333,12 @@ def api_handler():
                 if len(raw_nik) >= 16:
                     app_dict['nik'] = f"{raw_nik[:4]}********{raw_nik[-4:]}"
                 apps.append(app_dict)
-                
             return jsonify({"success": True, "data": apps})
 
+        # 9. Validasi Status (Role Admin Area & IT Support)
         elif action == 'update_status':
             if session.get('role') not in ['admin', 'operator']:
-                return jsonify({"success": False, "message": "Akses khusus admin atau operator."})
+                return jsonify({"success": False, "message": "Akses ditolak."})
                 
             app_id = request.form.get('app_id')
             status = request.form.get('status')
@@ -297,50 +350,49 @@ def api_handler():
             conn.commit()
             return jsonify({"success": True, "message": f"Status berhasil diubah menjadi {status}."})
 
-        # --- FITUR MANAJEMEN PENGGUNA (KHUSUS ROLE: OPERATOR) ---
+        # 10. Mengambil Daftar Seluruh User (Hanya Role IT Support/Operator)
         elif action == 'get_all_users':
             if session.get('role') != 'operator':
-                return jsonify({"success": False, "message": "Akses khusus Super Operator."})
+                return jsonify({"success": False, "message": "Akses ditolak. Fitur khusus IT Support."})
             
-            cursor.execute("SELECT id, name, email, role, created_at FROM users ORDER BY created_at DESC")
+            cursor.execute("SELECT id, name, email, role, created_at FROM users ORDER BY id DESC")
             users = [dict(row) for row in cursor.fetchall()]
             return jsonify({"success": True, "data": users})
 
+        # 11. Merubah Hak Akses User (Hanya Role IT Support/Operator)
         elif action == 'update_user_role':
             if session.get('role') != 'operator':
-                return jsonify({"success": False, "message": "Akses khusus Super Operator."})
-            
+                return jsonify({"success": False, "message": "Akses ditolak. Fitur khusus IT Support."})
+                
             user_id = request.form.get('user_id')
             new_role = request.form.get('role')
             
-            if int(user_id) == session['user_id']:
-                return jsonify({"success": False, "message": "Tidak dapat mengubah role diri sendiri."})
-                
             if new_role not in ['user', 'admin', 'operator']:
                 return jsonify({"success": False, "message": "Role tidak valid."})
                 
             cursor.execute("UPDATE users SET role = ? WHERE id = ?", (new_role, user_id))
             conn.commit()
-            return jsonify({"success": True, "message": f"Role berhasil diubah menjadi {new_role}."})
+            return jsonify({"success": True, "message": f"Hak akses berhasil diubah menjadi {new_role}."})
 
+        # 12. Menghapus User dan Data Pendaftarannya (Hanya Role IT Support/Operator)
         elif action == 'delete_user':
             if session.get('role') != 'operator':
-                return jsonify({"success": False, "message": "Akses khusus Super Operator."})
+                return jsonify({"success": False, "message": "Akses ditolak. Fitur khusus IT Support."})
                 
             user_id = request.form.get('user_id')
-            
-            if int(user_id) == session['user_id']:
-                return jsonify({"success": False, "message": "Tidak dapat menghapus akun diri sendiri."})
+            # Proteksi agar operator tidak tidak sengaja menghapus akun dirinya sendiri
+            if str(user_id) == str(session['user_id']):
+                return jsonify({"success": False, "message": "Tidak dapat menghapus akun Anda sendiri."})
                 
             cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
             conn.commit()
-            return jsonify({"success": True, "message": "Pengguna berhasil dihapus secara permanen."})
+            return jsonify({"success": True, "message": "Akun berhasil dihapus."})
 
         return jsonify({"success": False, "message": "Action tidak dikenali."})
         
     except Exception as e:
         logging.error(f"Internal Server Error: {str(e)}", exc_info=True)
-        return jsonify({"success": False, "message": f"Sistem sedang mengalami gangguan. Silakan coba beberapa saat lagi."}), 500
+        return jsonify({"success": False, "message": "Sistem sedang mengalami gangguan."}), 500
     finally:
         cursor.close()
         conn.close()
