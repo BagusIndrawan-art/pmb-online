@@ -149,6 +149,27 @@
             100% { top: 90%; left: 80%; opacity: 0; transform: scale(1); }
         }
 
+        .floating { animation: floating 3s ease-in-out infinite; }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+        .delay-100 { animation-delay: 0.2s; }
+        .delay-200 { animation-delay: 0.4s; }
+        .delay-300 { animation-delay: 0.6s; }
+
+        /* Animasi Grid Accordion untuk FAQ yang smooth */
+        .faq-grid {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .faq-grid.open { grid-template-rows: 1fr; }
+        .faq-content { overflow: hidden; }
+        .faq-icon { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .faq-icon.open { transform: rotate(180deg); color: #60a5fa; } /* blue-400 */
+
         /* Kustom Scrollbar untuk tema gelap */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
@@ -170,17 +191,19 @@
 
     <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/10">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="flex items-center space-x-2 text-2xl font-extrabold text-white tracking-tight hover:scale-105 transition transform">
+            <a href="javascript:void(0)" onclick="showLandingPage(); window.scrollTo({top:0, behavior:'smooth'})" class="flex items-center space-x-2 text-2xl font-extrabold text-white tracking-tight hover:scale-105 transition transform">
                 <span class="text-3xl">🎓</span>
                 <span class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Univ. Modern</span>
             </a>
-            <nav class="hidden md:flex space-x-8 font-semibold text-slate-300">
-                <a href="#home" class="nav-link text-blue-400 font-bold transition">Beranda</a>
-                <a href="#prodi" class="nav-link hover:text-blue-400 transition">Program Studi</a>
-                <a href="#alur" class="nav-link hover:text-blue-400 transition">Alur Daftar</a>
+            <nav class="hidden md:flex space-x-6 lg:space-x-8 font-semibold text-slate-300 text-sm lg:text-base">
+                <a href="javascript:void(0)" onclick="showLandingPage(); window.scrollTo({top:0, behavior:'smooth'})" class="nav-link text-blue-400 font-bold transition">Beranda</a>
+                <a href="#prodi" onclick="showLandingPage()" class="nav-link hover:text-blue-400 transition">Prodi</a>
+                <a href="#alur" onclick="showLandingPage()" class="nav-link hover:text-blue-400 transition">Alur Daftar</a>
+                <a href="#fasilitas" onclick="showLandingPage()" class="nav-link hover:text-blue-400 transition">Fasilitas</a>
+                <a href="#faq" onclick="showLandingPage()" class="nav-link hover:text-blue-400 transition">FAQ</a>
             </nav>
             <div id="nav-auth-container" class="flex items-center space-x-4">
-                <a href="#portal" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-[0_0_15px_rgba(79,70,229,0.5)]">Mulai Daftar</a>
+                <button onclick="showAuthPage()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-[0_0_15px_rgba(79,70,229,0.5)]">Mulai Daftar</button>
             </div>
         </div>
     </header>
@@ -199,7 +222,7 @@
                     Sistem pendaftaran online yang interaktif, cepat, dan mudah dipantau langsung dari gadget kesayanganmu.
                 </p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="#portal" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold px-10 py-4 rounded-2xl text-md transition transform hover:-translate-y-1 hover:scale-105 shadow-[0_10px_25px_rgba(79,70,229,0.4)]">Daftar Akun Sekarang</a>
+                    <button onclick="showAuthPage()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold px-10 py-4 rounded-2xl text-md transition transform hover:-translate-y-1 hover:scale-105 shadow-[0_10px_25px_rgba(79,70,229,0.4)]">Daftar Akun Sekarang</button>
                 </div>
             </div>
         </section>
@@ -390,10 +413,129 @@
             </div>
         </section>
 
+        <section id="fasilitas" class="py-24 max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-20" data-aos="fade-up">
+                <span class="text-cyan-400 text-xs font-bold px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 uppercase tracking-widest mb-4 inline-block">Campus Ecosystem</span>
+                <h2 class="text-4xl font-extrabold text-white mb-4">Fasilitas & Ekosistem Digital</h2>
+                <p class="text-slate-400 text-lg">Dukungan infrastruktur modern untuk memastikan mahasiswa siap bersaing di era revolusi industri.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card Fasilitas 1 -->
+                <div class="glass-panel p-8 rounded-3xl group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(6,182,212,0.2)] transition-all duration-500 border border-white/5 hover:border-cyan-500/30 relative overflow-hidden" data-aos="fade-up" data-aos-delay="0">
+                    <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="w-16 h-16 bg-cyan-500/10 rounded-2xl flex items-center justify-center text-cyan-400 text-3xl mb-6 floating relative z-10 shadow-[0_0_20px_rgba(6,182,212,0.2)] group-hover:scale-110 transition-transform duration-300">
+                        <i class="fa-solid fa-vr-cardboard"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 relative z-10">Smart Classroom</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed relative z-10">Ruang kelas interaktif berbasis IoT dan VR untuk pengalaman simulasi praktek yang imersif.</p>
+                </div>
+
+                <!-- Card Fasilitas 2 -->
+                <div class="glass-panel p-8 rounded-3xl group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(59,130,246,0.2)] transition-all duration-500 border border-white/5 hover:border-blue-500/30 relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400 text-3xl mb-6 floating delay-100 relative z-10 shadow-[0_0_20px_rgba(59,130,246,0.2)] group-hover:scale-110 transition-transform duration-300">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 relative z-10">AI Research Lab</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed relative z-10">Laboratorium superkomputer eksklusif untuk penelitian kecerdasan buatan dan Big Data.</p>
+                </div>
+
+                <!-- Card Fasilitas 3 -->
+                <div class="glass-panel p-8 rounded-3xl group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(168,85,247,0.2)] transition-all duration-500 border border-white/5 hover:border-purple-500/30 relative overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400 text-3xl mb-6 floating delay-200 relative z-10 shadow-[0_0_20px_rgba(168,85,247,0.2)] group-hover:scale-110 transition-transform duration-300">
+                        <i class="fa-solid fa-book-journal-whills"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 relative z-10">E-Library Global</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed relative z-10">Akses tanpa batas ke ribuan jurnal internasional, e-book, dan repositori karya ilmiah.</p>
+                </div>
+
+                <!-- Card Fasilitas 4 -->
+                <div class="glass-panel p-8 rounded-3xl group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(245,158,11,0.2)] transition-all duration-500 border border-white/5 hover:border-amber-500/30 relative overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                    <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="w-16 h-16 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-400 text-3xl mb-6 floating delay-300 relative z-10 shadow-[0_0_20px_rgba(245,158,11,0.2)] group-hover:scale-110 transition-transform duration-300">
+                        <i class="fa-solid fa-rocket"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 relative z-10">Startup Incubator</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed relative z-10">Ruang kolaborasi dan mentoring bisnis bagi mahasiswa yang ingin merintis perusahaan rintisan.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="py-24 max-w-4xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl font-extrabold text-white mb-4">Pertanyaan Seputar PMB</h2>
+                <p class="text-slate-400 text-lg">Jawaban cepat untuk pertanyaan yang paling sering diajukan oleh calon mahasiswa baru.</p>
+            </div>
+
+            <div class="space-y-4" data-aos="fade-up" data-aos-delay="100">
+                <!-- FAQ Item 1 -->
+                <div class="glass-panel border border-white/10 rounded-2xl overflow-hidden transition-colors duration-300 hover:border-white/30 hover:bg-slate-800/40">
+                    <button onclick="toggleFAQ(1)" class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none group">
+                        <span class="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">Apakah seluruh pendaftaran dilakukan secara online?</span>
+                        <i id="faq-icon-1" class="fa-solid fa-chevron-down text-slate-400 faq-icon text-sm"></i>
+                    </button>
+                    <div id="faq-ans-1" class="faq-grid">
+                        <div class="faq-content">
+                            <div class="px-8 pb-6 text-slate-400 text-sm leading-relaxed">
+                                Ya, 100% online. Mulai dari pembuatan akun, pengisian biodata, unggah berkas (Ijazah, KK, Pas Foto), hingga pengumuman kelulusan dilakukan melalui portal ini. Anda tidak perlu mengirimkan dokumen fisik ke kampus.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="glass-panel border border-white/10 rounded-2xl overflow-hidden transition-colors duration-300 hover:border-white/30 hover:bg-slate-800/40">
+                    <button onclick="toggleFAQ(2)" class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none group">
+                        <span class="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">Bagaimana jika saya belum memiliki Ijazah (masih kelas 12)?</span>
+                        <i id="faq-icon-2" class="fa-solid fa-chevron-down text-slate-400 faq-icon text-sm"></i>
+                    </button>
+                    <div id="faq-ans-2" class="faq-grid">
+                        <div class="faq-content">
+                            <div class="px-8 pb-6 text-slate-400 text-sm leading-relaxed">
+                                Bagi lulusan tahun berjalan yang ijazahnya belum terbit, Anda diperbolehkan mengunggah <strong>Surat Keterangan Lulus (SKL)</strong> asli yang ditandatangani oleh Kepala Sekolah beserta cap basah sekolah Anda.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="glass-panel border border-white/10 rounded-2xl overflow-hidden transition-colors duration-300 hover:border-white/30 hover:bg-slate-800/40">
+                    <button onclick="toggleFAQ(3)" class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none group">
+                        <span class="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">Berapa lama proses verifikasi dokumen berlangsung?</span>
+                        <i id="faq-icon-3" class="fa-solid fa-chevron-down text-slate-400 faq-icon text-sm"></i>
+                    </button>
+                    <div id="faq-ans-3" class="faq-grid">
+                        <div class="faq-content">
+                            <div class="px-8 pb-6 text-slate-400 text-sm leading-relaxed">
+                                Tim panitia seleksi kami akan memeriksa keabsahan dokumen dalam waktu maksimal <strong>2x24 jam kerja</strong>. Anda dapat mengecek status perubahan (Menunggu -> Diterima/Ditolak) langsung di Dashboard Portal Anda secara *real-time*.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="glass-panel border border-white/10 rounded-2xl overflow-hidden transition-colors duration-300 hover:border-white/30 hover:bg-slate-800/40">
+                    <button onclick="toggleFAQ(4)" class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none group">
+                        <span class="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">Apakah data pribadi saya aman?</span>
+                        <i id="faq-icon-4" class="fa-solid fa-chevron-down text-slate-400 faq-icon text-sm"></i>
+                    </button>
+                    <div id="faq-ans-4" class="faq-grid">
+                        <div class="faq-content">
+                            <div class="px-8 pb-6 text-slate-400 text-sm leading-relaxed">
+                                Sangat aman. Sistem PMB kami menggunakan arsitektur <em>Hybrid Decoupled</em> dengan enkripsi SSL/HTTPS (standar enkripsi Bank). File Anda diubah menjadi kode rahasia, dan kredensial disandi menggunakan algoritma canggih untuk mencegah kebocoran data.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="portal" class="py-24 max-w-6xl mx-auto px-6">
             
-            <!-- PORTAL GUEST: LOGIN & REGISTRASI -->
-            <div id="auth-box" class="max-w-md mx-auto glass-panel rounded-3xl overflow-hidden" data-aos="zoom-in">
+            <!-- PORTAL GUEST: LOGIN & REGISTRASI (Disembunyikan di awal) -->
+            <div id="auth-box" class="max-w-md mx-auto glass-panel rounded-3xl overflow-hidden hidden" data-aos="zoom-in">
                 <div class="flex border-b border-white/10 text-center font-bold bg-slate-900/40">
                     <button id="tab-login" onclick="switchTab('login')" class="w-1/2 py-5 text-blue-400 border-b-2 border-blue-500 outline-none transition">Masuk</button>
                     <button id="tab-register" onclick="switchTab('register')" class="w-1/2 py-5 text-slate-500 hover:text-white outline-none transition">Daftar Baru</button>
@@ -426,10 +568,13 @@
                             <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Buat Kata Sandi</label>
                             <input type="password" name="password" required placeholder="Minimal 6 karakter" class="w-full glass-input rounded-xl px-5 py-3.5 text-sm outline-none transition">
                         </div>
-                        <div class="flex items-center space-x-3 bg-blue-900/20 p-4 rounded-xl border border-blue-500/20">
+                        
+                        <!-- Checkbox Admin Disembunyikan karena sudah live production -->
+                        <div class="hidden flex items-center space-x-3 bg-blue-900/20 p-4 rounded-xl border border-blue-500/20">
                             <input type="checkbox" name="is_admin" id="is_admin" class="w-5 h-5 accent-blue-600 rounded bg-slate-800 border-slate-600 cursor-pointer">
                             <label for="is_admin" class="text-xs text-blue-300 font-bold cursor-pointer select-none leading-relaxed">Otoritas Admin (Uji Coba Panel Seleksi)</label>
                         </div>
+                        
                         <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-xl shadow-[0_0_15px_rgba(79,70,229,0.4)] transition duration-300 transform hover:scale-[1.02] mt-2">Buat Akun</button>
                     </form>
                 </div>
@@ -719,9 +864,6 @@
         AOS.init({ once: true, offset: 50 });
 
         let API_URL = 'https://bagusidrwn311.pythonanywhere.com/api';
-        if (window.location.protocol === 'blob:') {
-            API_URL = 'https://bagusidrwn311.pythonanywhere.com/api';
-        }
 
         const fetchConfig = (options = {}) => ({
             ...options,
@@ -771,6 +913,55 @@
             }
         }
 
+        // FUNGSI BARU: NAVIGASI KE HALAMAN LOGIN (SPA)
+        function showAuthPage() {
+            document.getElementById('home').classList.add('hidden');
+            document.getElementById('prodi').classList.add('hidden');
+            document.getElementById('alur').classList.add('hidden');
+            document.getElementById('fasilitas').classList.add('hidden'); // Sembunyikan bagian baru
+            document.getElementById('faq').classList.add('hidden');       // Sembunyikan bagian baru
+            
+            document.getElementById('auth-box').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // FUNGSI BARU: KEMBALI KE HALAMAN UTAMA (SPA)
+        function showLandingPage() {
+            const isUserLoggedIn = !document.getElementById('dashboard-user').classList.contains('hidden') || 
+                                   !document.getElementById('dashboard-admin').classList.contains('hidden');
+            
+            // Hanya izinkan kembali ke Beranda jika user belum berhasil login
+            if (!isUserLoggedIn) {
+                document.getElementById('home').classList.remove('hidden');
+                document.getElementById('prodi').classList.remove('hidden');
+                document.getElementById('alur').classList.remove('hidden');
+                document.getElementById('fasilitas').classList.remove('hidden'); // Tampilkan bagian baru
+                document.getElementById('faq').classList.remove('hidden');       // Tampilkan bagian baru
+                
+                document.getElementById('auth-box').classList.add('hidden');
+            }
+        }
+
+        function toggleFAQ(id) {
+            const answer = document.getElementById(`faq-ans-${id}`);
+            const icon = document.getElementById(`faq-icon-${id}`);
+            const isOpen = answer.classList.contains('open');
+
+            // Tutup semua FAQ terlebih dahulu (opsional, agar terlihat rapi)
+            document.querySelectorAll('.faq-grid').forEach(el => el.classList.remove('open'));
+            document.querySelectorAll('.faq-icon').forEach(el => {
+                el.classList.remove('open');
+                el.classList.remove('text-blue-400');
+            });
+
+            // Jika yang diklik sebelumnya tertutup, maka buka
+            if (!isOpen) {
+                answer.classList.add('open');
+                icon.classList.add('open');
+                icon.classList.add('text-blue-400');
+            }
+        }
+
         async function checkUserSession() {
             try {
                 const response = await fetch(`${API_URL}?action=check_session`, fetchConfig());
@@ -780,6 +971,11 @@
                 const dbUser = document.getElementById('dashboard-user');
                 const dbAdmin = document.getElementById('dashboard-admin');
                 const navAuthContainer = document.getElementById('nav-auth-container');
+                
+                // Mengambil elemen-elemen halaman utama (landing page)
+                const landingHome = document.getElementById('home');
+                const landingProdi = document.getElementById('prodi');
+                const landingAlur = document.getElementById('alur');
 
                 if (result.success) {
                     const user = result.data;
@@ -790,6 +986,11 @@
                         </span>
                         <button onclick="handleLogout()" class="bg-rose-600/20 hover:bg-rose-600/80 text-rose-300 hover:text-white border border-rose-500/30 font-bold px-5 py-2 rounded-xl text-sm transition shadow-[0_0_10px_rgba(244,63,94,0.2)]">Logout</button>
                     `;
+
+                    // SEMBUNYIKAN BAGIAN UTAMA WEBSITE SAAT LOGIN
+                    landingHome.classList.add('hidden');
+                    landingProdi.classList.add('hidden');
+                    landingAlur.classList.add('hidden');
 
                     authBox.classList.add('hidden');
                     if (user.role === 'user') {
@@ -804,11 +1005,17 @@
                     }
                 } else {
                     navAuthContainer.innerHTML = `
-                        <a href="#portal" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-[0_0_15px_rgba(79,70,229,0.5)]">Mulai Daftar</a>
+                        <button onclick="showAuthPage()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-[0_0_15px_rgba(79,70,229,0.5)]">Mulai Daftar</button>
                     `;
-                    authBox.classList.remove('hidden');
-                    dbUser.classList.add('hidden');
-                    dbAdmin.classList.add('hidden');
+                    
+                    // KONDISI AWAL (BELUM LOGIN): TAMPILKAN HALAMAN UTAMA, SEMBUNYIKAN FORM LOGIN
+                    landingHome.classList.remove('hidden');
+                    landingProdi.classList.remove('hidden');
+                    landingAlur.classList.remove('hidden');
+                    document.getElementById('fasilitas').classList.remove('hidden'); // Tampilkan saat awal
+                    document.getElementById('faq').classList.remove('hidden');       // Tampilkan saat awal
+                    
+                    authBox.classList.add('hidden');
                 }
             } catch (error) {
                 console.error('Error Session Validation:', error);
@@ -1030,13 +1237,11 @@
         let walkthroughInterval;
 
         function playStep(step) {
-            // Restart interval & jalankan step yang di-klik layaknya pindah scene video
             activateStep(step);
             startAutoWalkthrough();
         }
 
         function activateStep(step) {
-            // Update Buttons Styling & Progress Bar Animation
             for (let i = 1; i <= 4; i++) {
                 const btn = document.getElementById(`step-btn-${i}`);
                 const fill = btn.querySelector('.step-progress-fill');
@@ -1044,9 +1249,8 @@
                 if (i === step) {
                     btn.classList.remove('step-inactive');
                     btn.classList.add('step-active');
-                    // Reset animasi Progress Bar
                     fill.classList.remove('anim-progress-loop');
-                    void fill.offsetWidth; // Memicu reflow browser
+                    void fill.offsetWidth; 
                     fill.classList.add('anim-progress-loop');
                 } else {
                     btn.classList.add('step-inactive');
@@ -1055,7 +1259,6 @@
                 }
             }
 
-            // Update Visuals (Memicu ulang reflow CSS Animation di layar mockup)
             for (let i = 1; i <= 4; i++) {
                 const visual = document.getElementById(`visual-step-${i}`);
                 if (i === step) {
@@ -1067,7 +1270,6 @@
                 }
             }
             
-            // Reset Animasi Cursor untuk mensimulasikan pergerakan baru di layar
             const cursor = document.querySelector('.fake-cursor');
             if (cursor) {
                 cursor.style.animation = 'none';
@@ -1084,12 +1286,12 @@
                 let nextStep = currentStep + 1;
                 if (nextStep > 4) nextStep = 1;
                 activateStep(nextStep);
-            }, 4500); // Progress berjalan dan pindah step setiap 4.5 detik
+            }, 4500);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             checkUserSession();
-            startAutoWalkthrough(); // Mulai animasi alur pendaftaran
+            startAutoWalkthrough(); 
             
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.nav-link');
@@ -1098,13 +1300,11 @@
                 let current = '';
                 sections.forEach(section => {
                     const sectionTop = section.offsetTop;
-                    // Deteksi jika user sudah scroll masuk ke area section (offset 300px agar responsif)
                     if (pageYOffset >= (sectionTop - 300)) {
                         current = section.getAttribute('id');
                     }
                 });
 
-                // Perbarui warna navigasi sesuai ID section yang aktif
                 navLinks.forEach(link => {
                     link.classList.remove('text-blue-400', 'font-bold');
                     if (link.getAttribute('href') === `#${current}`) {
