@@ -9,19 +9,19 @@ import datetime
 import html
 
 app = Flask(__name__)
+# Secret key untuk manajemen sesi
 app.secret_key = 'super_secret_pmb_key_2026'
 
 # --- KONFIGURASI KEAMANAN KHUSUS UNTUK ONLINE (GITHub Pages) ---
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
-app.config['SESSION_COOKIE_HTTPONLY'] = True  # KONTROL 3: Manajemen Session & Cookie (Mencegah pencurian XSS)
+app.config['SESSION_COOKIE_HTTPONLY'] = True  
 
 # KONTROL 8: Logging & Monitoring
 logging.basicConfig(filename='security.log', level=logging.INFO, 
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 # --- KONFIGURASI CORS ---
-# Izinkan akses HANYA dari URL GitHub Pages kamu
 CORS(app, supports_credentials=True, origins=[
     "https://bagusindrawan-art.github.io", 
     "http://127.0.0.1:5500", 
@@ -30,15 +30,12 @@ CORS(app, supports_credentials=True, origins=[
 
 def get_db_connection():
     try:
-        # Menggunakan SQLite (Database berbentuk file yang tersimpan otomatis di folder yang sama)
         db_path = os.path.join(os.path.dirname(__file__), 'pmb_online.db')
         conn = sqlite3.connect(db_path)
-        
-        # Agar hasil fetch berupa dictionary (seperti MySQL)
         conn.row_factory = sqlite3.Row 
         cursor = conn.cursor()
         
-        # Pembuatan tabel otomatis
+        # Tabel Users
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,6 +49,7 @@ def get_db_connection():
             )
         """)
         
+        # Tabel Applications (PMB)
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS applications (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -84,6 +82,14 @@ def get_db_connection():
             )
         """)
         
+        # --- SEEDING AKUN OPERATOR DEFAULT ---
+        # Membuat akun operator otomatis jika belum ada di database
+        cursor.execute("SELECT id FROM users WHERE email = 'operator@univ.ac.id'")
+        if not cursor.fetchone():
+            hashed_op_pw = generate_password_hash('operator123')
+            cursor.execute("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
+                           ('Super Operator', 'operator@univ.ac.id', hashed_op_pw, 'operator'))
+                           
         conn.commit()
         return conn, cursor
     except sqlite3.Error as err:
@@ -128,7 +134,6 @@ def api_handler():
             hashed_pw = generate_password_hash(password)
             
             try:
-                # Perubahan syntax parameter SQLite menggunakan tanda '?' 
                 cursor.execute("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)", 
                               (name, email, hashed_pw, role))
                 conn.commit()
@@ -150,7 +155,6 @@ def api_handler():
                     return jsonify({"success": False, "message": "Akun terkunci karena terlalu banyak percobaan gagal. Silakan coba 15 menit lagi."})
 
                 if check_password_hash(user['password'], password):
-                    # Reset failed attempts jika login sukses
                     cursor.execute("UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE email = ?", (email,))
                     conn.commit()
                     
@@ -160,10 +164,9 @@ def api_handler():
                     logging.info(f"Login Sukses: User {email} (Role: {user['role']})")
                     return jsonify({"success": True, "message": "Login berhasil!", "data": {"name": user['name'], "role": user['role']}})
                 else:
-                    # Tambah hitungan gagal
                     attempts = user['failed_attempts'] + 1
                     locked_until = None
-                    if attempts >= 3: # Lockout setelah 3 kali salah
+                    if attempts >= 3: 
                         locked_until = (datetime.datetime.now() + datetime.timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S')
                         logging.warning(f"Lockout Diaktifkan: Akun {email} gagal login 3x.")
                     
@@ -175,17 +178,13 @@ def api_handler():
 
         elif action == 'get_user_application':
             if session.get('role') != 'user':
-                logging.warning(f"Unauthorized Access: Seseorang mencoba bypass ke data pendaftaran.")
                 return jsonify({"success": False, "message": "Akses ditolak."})
                 
-            # KONTROL 2: Otorisasi (Hanya mengambil data berdasarkan ID Sesi milik sendiri)
             cursor.execute("SELECT * FROM applications WHERE user_id = ?", (session['user_id'],))
             app_data = cursor.fetchone()
             
             if app_data:
                 app_dict = dict(app_data)
-                
-                # KONTROL 7: Proteksi Data Sensitif (Masking NIK)
                 raw_nik = app_dict['nik']
                 if len(raw_nik) >= 16:
                     app_dict['nik'] = f"{raw_nik[:4]}********{raw_nik[-4:]}"
@@ -201,7 +200,7 @@ def api_handler():
             if cursor.fetchone():
                 return jsonify({"success": False, "message": "Anda sudah mendaftar sebelumnya."})
                 
-            # KONTROL 4: Validasi & Sanitasi Input (html.escape mencegah XSS Injection)
+            # Validasi input
             nik = html.escape(request.form.get('nik', '').strip())
             phone = html.escape(request.form.get('phone', '').strip())
             prodi = html.escape(request.form.get('prodi', '').strip())
@@ -224,7 +223,6 @@ def api_handler():
             
             def process_file(f):
                 if f and f.filename:
-                    # KONTROL 5: Proteksi Upload File (Strict MIME-Type Check)
                     allowed_mimes = ['image/jpeg', 'image/png', 'application/pdf']
                     if f.mimetype not in allowed_mimes:
                         return "invalid_type"
@@ -247,7 +245,6 @@ def api_handler():
                 return jsonify({"success": False, "message": "Semua berkas (Foto, Ijazah, Akta, KK) wajib diunggah."})
 
             if "invalid_type" in [photo_b64, ijazah_b64, akta_b64, kk_b64]:
-                logging.warning(f"File Rejection: Upaya upload file berbahaya oleh User ID {session['user_id']}")
                 return jsonify({"success": False, "message": "Tipe file tidak diizinkan. Hanya menerima JPG, PNG, atau PDF."})
 
             if "too_large" in [photo_b64, ijazah_b64, akta_b64, kk_b64]:
@@ -267,10 +264,9 @@ def api_handler():
             return jsonify({"success": True, "message": "Formulir pendaftaran beserta berkas berhasil disimpan!"})
 
         elif action == 'get_all_applications':
-            # KONTROL 2: Otorisasi RBAC (Hanya Admin)
-            if session.get('role') != 'admin':
-                logging.warning(f"Privilege Escalation Attempt: {session.get('email')} mencoba akses halaman admin.")
-                return jsonify({"success": False, "message": "Akses khusus admin."})
+            # KONTROL Otorisasi: Admin & Operator punya akses
+            if session.get('role') not in ['admin', 'operator']:
+                return jsonify({"success": False, "message": "Akses khusus admin atau operator."})
                 
             cursor.execute("""
                 SELECT a.id, a.nik, a.phone, a.prodi, a.photo, a.status, u.name, u.email 
@@ -280,18 +276,16 @@ def api_handler():
             apps = []
             for row in cursor.fetchall():
                 app_dict = dict(row)
-                # KONTROL 7: Masking NIK untuk Operator juga
                 raw_nik = app_dict['nik']
                 if len(raw_nik) >= 16:
                     app_dict['nik'] = f"{raw_nik[:4]}********{raw_nik[-4:]}"
                 apps.append(app_dict)
                 
-            logging.info(f"Admin Access: {session.get('email')} memuat seluruh data pendaftaran.")
             return jsonify({"success": True, "data": apps})
 
         elif action == 'update_status':
-            if session.get('role') != 'admin':
-                return jsonify({"success": False, "message": "Akses khusus admin."})
+            if session.get('role') not in ['admin', 'operator']:
+                return jsonify({"success": False, "message": "Akses khusus admin atau operator."})
                 
             app_id = request.form.get('app_id')
             status = request.form.get('status')
@@ -303,10 +297,48 @@ def api_handler():
             conn.commit()
             return jsonify({"success": True, "message": f"Status berhasil diubah menjadi {status}."})
 
+        # --- FITUR MANAJEMEN PENGGUNA (KHUSUS ROLE: OPERATOR) ---
+        elif action == 'get_all_users':
+            if session.get('role') != 'operator':
+                return jsonify({"success": False, "message": "Akses khusus Super Operator."})
+            
+            cursor.execute("SELECT id, name, email, role, created_at FROM users ORDER BY created_at DESC")
+            users = [dict(row) for row in cursor.fetchall()]
+            return jsonify({"success": True, "data": users})
+
+        elif action == 'update_user_role':
+            if session.get('role') != 'operator':
+                return jsonify({"success": False, "message": "Akses khusus Super Operator."})
+            
+            user_id = request.form.get('user_id')
+            new_role = request.form.get('role')
+            
+            if int(user_id) == session['user_id']:
+                return jsonify({"success": False, "message": "Tidak dapat mengubah role diri sendiri."})
+                
+            if new_role not in ['user', 'admin', 'operator']:
+                return jsonify({"success": False, "message": "Role tidak valid."})
+                
+            cursor.execute("UPDATE users SET role = ? WHERE id = ?", (new_role, user_id))
+            conn.commit()
+            return jsonify({"success": True, "message": f"Role berhasil diubah menjadi {new_role}."})
+
+        elif action == 'delete_user':
+            if session.get('role') != 'operator':
+                return jsonify({"success": False, "message": "Akses khusus Super Operator."})
+                
+            user_id = request.form.get('user_id')
+            
+            if int(user_id) == session['user_id']:
+                return jsonify({"success": False, "message": "Tidak dapat menghapus akun diri sendiri."})
+                
+            cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+            conn.commit()
+            return jsonify({"success": True, "message": "Pengguna berhasil dihapus secara permanen."})
+
         return jsonify({"success": False, "message": "Action tidak dikenali."})
         
     except Exception as e:
-        # KONTROL 6: Error Handling (Jangan pernah tampilkan query database ke user)
         logging.error(f"Internal Server Error: {str(e)}", exc_info=True)
         return jsonify({"success": False, "message": f"Sistem sedang mengalami gangguan. Silakan coba beberapa saat lagi."}), 500
     finally:

@@ -5,22 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PMB Online - Universitas Modern</title>
     
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- AOS Animation Library CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        /* Animasi Blob Background */
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
@@ -31,9 +23,8 @@
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
 
-        /* Efek Glassmorphism Premium */
         .glass-panel {
-            background: rgba(30, 41, 59, 0.4); /* Slate-800 dengan transparansi */
+            background: rgba(30, 41, 59, 0.4);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -41,7 +32,7 @@
         }
         
         .glass-input {
-            background: rgba(15, 23, 42, 0.6) !important; /* Slate-900 translusen */
+            background: rgba(15, 23, 42, 0.6) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             color: white !important;
         }
@@ -50,7 +41,6 @@
             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3) !important;
         }
 
-        /* Notifikasi Toast */
         .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -71,35 +61,16 @@
             background: rgba(255, 255, 255, 0.03);
         }
         
-        /* Animasi di dalam Mockup Interactive */
-        .anim-typewriter {
-            width: 0;
-            animation: typewriter 1.5s steps(40, end) forwards;
-        }
-        .anim-fade-up-mockup {
-            opacity: 0;
-            transform: translateY(15px);
-            animation: fadeUpMockup 0.5s ease-out forwards;
-        }
-        .anim-progress {
-            width: 0;
-            animation: progressLoad 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        .anim-pop {
-            transform: scale(0);
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
+        .anim-typewriter { width: 0; animation: typewriter 1.5s steps(40, end) forwards; }
+        .anim-fade-up-mockup { opacity: 0; transform: translateY(15px); animation: fadeUpMockup 0.5s ease-out forwards; }
+        .anim-progress { width: 0; animation: progressLoad 2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .anim-pop { transform: scale(0); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
         @keyframes typewriter { to { width: 100%; } }
         @keyframes fadeUpMockup { to { opacity: 1; transform: translateY(0); } }
-        @keyframes progressLoad { 
-            0% { width: 0%; }
-            50% { width: 70%; }
-            100% { width: 100%; }
-        }
+        @keyframes progressLoad { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
         @keyframes popIn { to { transform: scale(1); } }
         
-        /* Progress Bar untuk Video Looping */
         .step-progress-bar {
             height: 4px;
             background: rgba(255, 255, 255, 0.1);
@@ -115,15 +86,9 @@
             background: linear-gradient(90deg, #3b82f6, #8b5cf6);
             width: 0%;
         }
-        .anim-progress-loop {
-            animation: loopProgress 4.5s linear forwards;
-        }
-        @keyframes loopProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
+        .anim-progress-loop { animation: loopProgress 4.5s linear forwards; }
+        @keyframes loopProgress { 0% { width: 0%; } 100% { width: 100%; } }
 
-        /* Fake Cursor / Pointer Interaktif layaknya Video */
         .fake-cursor {
             position: absolute;
             width: 28px;
@@ -133,17 +98,15 @@
             opacity: 0;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
         }
-        .anim-cursor-move {
-            animation: cursorMove 4.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
+        .anim-cursor-move { animation: cursorMove 4.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes cursorMove {
             0% { top: 90%; left: 80%; opacity: 0; transform: scale(1); }
             5% { opacity: 1; }
             30% { top: 40%; left: 50%; transform: scale(1); }
-            35% { top: 40%; left: 50%; transform: scale(0.8); } /* Animasi Klik Kursor */
+            35% { top: 40%; left: 50%; transform: scale(0.8); }
             40% { top: 40%; left: 50%; transform: scale(1); }
             65% { top: 75%; left: 50%; transform: scale(1); }
-            70% { top: 75%; left: 50%; transform: scale(0.8); } /* Animasi Klik Kursor ke-2 */
+            70% { top: 75%; left: 50%; transform: scale(0.8); }
             75% { top: 75%; left: 50%; transform: scale(1); }
             95% { top: 90%; left: 80%; opacity: 0; transform: scale(1); }
             100% { top: 90%; left: 80%; opacity: 0; transform: scale(1); }
@@ -159,7 +122,6 @@
         .delay-200 { animation-delay: 0.4s; }
         .delay-300 { animation-delay: 0.6s; }
 
-        /* Animasi Grid Accordion untuk FAQ yang smooth */
         .faq-grid {
             display: grid;
             grid-template-rows: 0fr;
@@ -168,9 +130,8 @@
         .faq-grid.open { grid-template-rows: 1fr; }
         .faq-content { overflow: hidden; }
         .faq-icon { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .faq-icon.open { transform: rotate(180deg); color: #60a5fa; } /* blue-400 */
+        .faq-icon.open { transform: rotate(180deg); color: #60a5fa; }
 
-        /* Kustom Scrollbar untuk tema gelap */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
@@ -179,14 +140,12 @@
 </head>
 <body class="bg-slate-950 text-slate-300 antialiased flex flex-col min-h-screen relative overflow-x-hidden">
 
-    <!-- Background Animated Blobs -->
     <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
         <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600 rounded-full mix-blend-screen filter blur-[120px] opacity-40 animate-blob"></div>
         <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-screen filter blur-[120px] opacity-40 animate-blob animation-delay-2000"></div>
         <div class="absolute bottom-[-20%] left-[20%] w-[30rem] h-[30rem] bg-indigo-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob animation-delay-4000"></div>
     </div>
 
-    <!-- Kontainer Notifikasi -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3"></div>
 
     <header class="glass-panel sticky top-0 z-40 border-b-0 border-white/10">
@@ -209,8 +168,6 @@
     </header>
 
     <main class="flex-grow">
-        
-        <!-- Hero Section -->
         <section id="home" class="relative py-32 px-6 text-center">
             <div class="max-w-4xl mx-auto relative z-10" data-aos="zoom-in" data-aos-duration="1000">
                 <span class="glass-panel text-blue-300 text-xs font-bold px-5 py-2 rounded-full uppercase tracking-widest mb-8 inline-block shadow-lg border border-blue-500/30">Penerimaan Mahasiswa Baru 2026/2027</span>
@@ -233,19 +190,16 @@
                 <p class="text-slate-400 text-lg">Pilih masa depanmu dari program studi terakreditasi A dengan prospek cemerlang.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Card 1 -->
                 <div class="glass-panel p-10 rounded-3xl group transition duration-500 hover:-translate-y-3 hover:shadow-[0_20px_40px_rgba(59,130,246,0.2)]" data-aos="fade-up" data-aos-delay="100">
                     <div class="w-16 h-16 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-2xl flex items-center justify-center text-3xl font-bold mb-8 group-hover:scale-110 transition duration-300 shadow-[0_0_20px_rgba(59,130,246,0.3)]">💻</div>
                     <h3 class="text-2xl font-bold text-white mb-4">Teknik Informatika</h3>
                     <p class="text-slate-400 text-sm leading-relaxed">Fokus pada rekayasa perangkat lunak, keamanan siber, kecerdasan buatan (AI), dan pengembangan arsitektur teknologi masa depan.</p>
                 </div>
-                <!-- Card 2 -->
                 <div class="glass-panel p-10 rounded-3xl group transition duration-500 hover:-translate-y-3 hover:shadow-[0_20px_40px_rgba(168,85,247,0.2)]" data-aos="fade-up" data-aos-delay="200">
                     <div class="w-16 h-16 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-2xl flex items-center justify-center text-3xl font-bold mb-8 group-hover:scale-110 transition duration-300 shadow-[0_0_20px_rgba(168,85,247,0.3)]">📊</div>
                     <h3 class="text-2xl font-bold text-white mb-4">Sistem Informasi</h3>
                     <p class="text-slate-400 text-sm leading-relaxed">Menjembatani strategi bisnis dengan analisis teknologi data. Mempelajari tata kelola, manajemen proyek IT, dan e-business.</p>
                 </div>
-                <!-- Card 3 -->
                 <div class="glass-panel p-10 rounded-3xl group transition duration-500 hover:-translate-y-3 hover:shadow-[0_20px_40px_rgba(245,158,11,0.2)]" data-aos="fade-up" data-aos-delay="300">
                     <div class="w-16 h-16 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-2xl flex items-center justify-center text-3xl font-bold mb-8 group-hover:scale-110 transition duration-300 shadow-[0_0_20px_rgba(245,158,11,0.3)]">🎨</div>
                     <h3 class="text-2xl font-bold text-white mb-4">DKV</h3>
@@ -262,7 +216,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <!-- Kolom Kiri: Navigasi Steps -->
                 <div class="lg:col-span-5 space-y-4" data-aos="fade-right">
                     
                     <div id="step-btn-1" onclick="playStep(1)" class="step-btn glass-panel p-6 rounded-2xl cursor-pointer border transition-all duration-300 step-active">
@@ -311,10 +264,8 @@
 
                 </div>
 
-                <!-- Kolom Kanan: Interactive Mockup Screen -->
                 <div class="lg:col-span-7" data-aos="fade-left">
                     <div class="glass-panel rounded-3xl overflow-hidden border border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.4)] relative bg-slate-900/80">
-                        <!-- Header Mockup Window (Mac OS style) -->
                         <div class="bg-slate-950/80 px-4 py-3 border-b border-white/10 flex items-center space-x-2">
                             <div class="w-3 h-3 rounded-full bg-rose-500"></div>
                             <div class="w-3 h-3 rounded-full bg-amber-500"></div>
@@ -322,15 +273,11 @@
                             <div class="mx-auto text-[10px] text-slate-500 font-mono flex-grow text-center opacity-50 pl-8">app.univmodern.ac.id</div>
                         </div>
 
-                        <!-- Area Animasi Layar (Konten Berubah) -->
                         <div class="p-8 h-80 relative flex items-center justify-center overflow-hidden">
-                            
-                            <!-- Animasi Kursor (Mouse) Penunjuk -->
                             <svg class="fake-cursor anim-cursor-move" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5.5 3.21V20.8C5.5 21.43 6.22 21.79 6.72 21.41L11.36 17.84C11.59 17.66 11.89 17.57 12.19 17.59L17.53 17.96C18.17 18.01 18.66 17.38 18.4 16.79L11.77 2.1C11.5 1.51 10.65 1.48 10.35 2.05L5.75 10.98" fill="white" stroke="#0f172a" stroke-width="1.5" stroke-linejoin="round"/>
                             </svg>
 
-                            <!-- Visual Step 1: Registrasi -->
                             <div id="visual-step-1" class="w-full max-w-sm">
                                 <div class="text-center mb-6 anim-fade-up-mockup">
                                     <div class="w-12 h-12 bg-blue-500/20 rounded-xl mx-auto mb-2 flex items-center justify-center text-blue-400"><i class="fa-solid fa-user-plus"></i></div>
@@ -349,7 +296,6 @@
                                 </div>
                             </div>
 
-                            <!-- Visual Step 2: Login -->
                             <div id="visual-step-2" class="w-full max-w-sm hidden">
                                 <div class="bg-slate-800/80 p-6 rounded-2xl border border-slate-700 anim-fade-up-mockup relative overflow-hidden">
                                     <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent"></div>
@@ -373,7 +319,6 @@
                                 </div>
                             </div>
 
-                            <!-- Visual Step 3: Upload Data -->
                             <div id="visual-step-3" class="w-full max-w-md hidden">
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 anim-fade-up-mockup">
@@ -392,7 +337,6 @@
                                 </div>
                             </div>
 
-                            <!-- Visual Step 4: Hasil -->
                             <div id="visual-step-4" class="w-full text-center hidden">
                                 <div class="anim-pop inline-flex items-center justify-center w-24 h-24 rounded-full bg-emerald-500/20 border-4 border-emerald-500/30 text-emerald-400 text-5xl mb-6 shadow-[0_0_30px_rgba(16,185,129,0.3)]">
                                     <i class="fa-solid fa-check"></i>
@@ -421,7 +365,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Card Fasilitas 1 -->
                 <div class="glass-panel p-8 rounded-3xl group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(6,182,212,0.2)] transition-all duration-500 border border-white/5 hover:border-cyan-500/30 relative overflow-hidden" data-aos="fade-up" data-aos-delay="0">
                     <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div class="w-16 h-16 bg-cyan-500/10 rounded-2xl flex items-center justify-center text-cyan-400 text-3xl mb-6 floating relative z-10 shadow-[0_0_20px_rgba(6,182,212,0.2)] group-hover:scale-110 transition-transform duration-300">
@@ -430,8 +373,6 @@
                     <h3 class="text-xl font-bold text-white mb-3 relative z-10">Smart Classroom</h3>
                     <p class="text-slate-400 text-sm leading-relaxed relative z-10">Ruang kelas interaktif berbasis IoT dan VR untuk pengalaman simulasi praktek yang imersif.</p>
                 </div>
-
-                <!-- Card Fasilitas 2 -->
                 <div class="glass-panel p-8 rounded-3xl group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(59,130,246,0.2)] transition-all duration-500 border border-white/5 hover:border-blue-500/30 relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400 text-3xl mb-6 floating delay-100 relative z-10 shadow-[0_0_20px_rgba(59,130,246,0.2)] group-hover:scale-110 transition-transform duration-300">
@@ -440,8 +381,6 @@
                     <h3 class="text-xl font-bold text-white mb-3 relative z-10">AI Research Lab</h3>
                     <p class="text-slate-400 text-sm leading-relaxed relative z-10">Laboratorium superkomputer eksklusif untuk penelitian kecerdasan buatan dan Big Data.</p>
                 </div>
-
-                <!-- Card Fasilitas 3 -->
                 <div class="glass-panel p-8 rounded-3xl group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(168,85,247,0.2)] transition-all duration-500 border border-white/5 hover:border-purple-500/30 relative overflow-hidden" data-aos="fade-up" data-aos-delay="200">
                     <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div class="w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400 text-3xl mb-6 floating delay-200 relative z-10 shadow-[0_0_20px_rgba(168,85,247,0.2)] group-hover:scale-110 transition-transform duration-300">
@@ -450,8 +389,6 @@
                     <h3 class="text-xl font-bold text-white mb-3 relative z-10">E-Library Global</h3>
                     <p class="text-slate-400 text-sm leading-relaxed relative z-10">Akses tanpa batas ke ribuan jurnal internasional, e-book, dan repositori karya ilmiah.</p>
                 </div>
-
-                <!-- Card Fasilitas 4 -->
                 <div class="glass-panel p-8 rounded-3xl group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(245,158,11,0.2)] transition-all duration-500 border border-white/5 hover:border-amber-500/30 relative overflow-hidden" data-aos="fade-up" data-aos-delay="300">
                     <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div class="w-16 h-16 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-400 text-3xl mb-6 floating delay-300 relative z-10 shadow-[0_0_20px_rgba(245,158,11,0.2)] group-hover:scale-110 transition-transform duration-300">
@@ -470,7 +407,6 @@
             </div>
 
             <div class="space-y-4" data-aos="fade-up" data-aos-delay="100">
-                <!-- FAQ Item 1 -->
                 <div class="glass-panel border border-white/10 rounded-2xl overflow-hidden transition-colors duration-300 hover:border-white/30 hover:bg-slate-800/40">
                     <button onclick="toggleFAQ(1)" class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none group">
                         <span class="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">Apakah seluruh pendaftaran dilakukan secara online?</span>
@@ -485,7 +421,6 @@
                     </div>
                 </div>
 
-                <!-- FAQ Item 2 -->
                 <div class="glass-panel border border-white/10 rounded-2xl overflow-hidden transition-colors duration-300 hover:border-white/30 hover:bg-slate-800/40">
                     <button onclick="toggleFAQ(2)" class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none group">
                         <span class="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">Bagaimana jika saya belum memiliki Ijazah (masih kelas 12)?</span>
@@ -500,7 +435,6 @@
                     </div>
                 </div>
 
-                <!-- FAQ Item 3 -->
                 <div class="glass-panel border border-white/10 rounded-2xl overflow-hidden transition-colors duration-300 hover:border-white/30 hover:bg-slate-800/40">
                     <button onclick="toggleFAQ(3)" class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none group">
                         <span class="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">Berapa lama proses verifikasi dokumen berlangsung?</span>
@@ -515,7 +449,6 @@
                     </div>
                 </div>
                 
-                <!-- FAQ Item 4 -->
                 <div class="glass-panel border border-white/10 rounded-2xl overflow-hidden transition-colors duration-300 hover:border-white/30 hover:bg-slate-800/40">
                     <button onclick="toggleFAQ(4)" class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none group">
                         <span class="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">Apakah data pribadi saya aman?</span>
@@ -534,7 +467,6 @@
 
         <section id="portal" class="py-24 max-w-6xl mx-auto px-6">
             
-            <!-- PORTAL GUEST: LOGIN & REGISTRASI (Disembunyikan di awal) -->
             <div id="auth-box" class="max-w-md mx-auto glass-panel rounded-3xl overflow-hidden hidden" data-aos="zoom-in">
                 <div class="flex border-b border-white/10 text-center font-bold bg-slate-900/40">
                     <button id="tab-login" onclick="switchTab('login')" class="w-1/2 py-5 text-blue-400 border-b-2 border-blue-500 outline-none transition">Masuk</button>
@@ -569,7 +501,6 @@
                             <input type="password" name="password" required placeholder="Minimal 6 karakter" class="w-full glass-input rounded-xl px-5 py-3.5 text-sm outline-none transition">
                         </div>
                         
-                        <!-- Checkbox Admin Disembunyikan karena sudah live production -->
                         <div class="hidden flex items-center space-x-3 bg-blue-900/20 p-4 rounded-xl border border-blue-500/20">
                             <input type="checkbox" name="is_admin" id="is_admin" class="w-5 h-5 accent-blue-600 rounded bg-slate-800 border-slate-600 cursor-pointer">
                             <label for="is_admin" class="text-xs text-blue-300 font-bold cursor-pointer select-none leading-relaxed">Otoritas Admin (Uji Coba Panel Seleksi)</label>
@@ -582,7 +513,6 @@
 
             <div id="dashboard-user" class="hidden fade-in max-w-7xl mx-auto" data-aos="fade-up">
                 <div class="flex flex-col lg:flex-row gap-6">
-                    <!-- Sidebar Navigasi Menu User -->
                     <div class="w-full lg:w-1/4">
                         <div class="glass-panel p-6 rounded-3xl space-y-2 lg:sticky top-28 shadow-lg">
                             <div class="pb-5 mb-5 border-b border-white/10 text-center lg:text-left">
@@ -594,7 +524,6 @@
                                 <span class="inline-block mt-2 bg-gradient-to-r from-blue-600/30 to-indigo-600/30 text-blue-300 border border-blue-500/30 text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow-inner">Pendaftar Reguler</span>
                             </div>
                             
-                            <!-- Tombol Kategori Tab -->
                             <button onclick="switchUserTab('status')" id="nav-user-status" class="w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl bg-blue-600/20 text-blue-400 font-bold transition text-sm border border-blue-500/30 shadow-inner">
                                 <i class="fa-solid fa-chart-pie w-5"></i><span>Status Seleksi</span>
                             </button>
@@ -607,19 +536,16 @@
                         </div>
                     </div>
 
-                    <!-- Area Konten Utama User -->
                     <div class="w-full lg:w-3/4">
                         <div class="glass-panel p-6 md:p-10 rounded-3xl shadow-xl min-h-[500px]">
                             
-                            <!-- TAB 1: FORMULIR PMB -->
+                            <!-- TAB FORM USER -->
                             <div id="user-tab-form" class="hidden">
                                 <h3 class="text-xl font-bold mb-8 text-white flex items-center space-x-3 border-b border-white/10 pb-4">
                                     <div class="w-10 h-10 bg-indigo-500/20 text-indigo-400 rounded-lg flex items-center justify-center text-lg"><i class="fa-solid fa-address-book"></i></div>
                                     <span>Lengkapi Administrasi Pendaftaran</span>
                                 </h3>
                                 <form id="form-pmb" onsubmit="submitPMB(event)" enctype="multipart/form-data" class="space-y-8">
-                                    
-                                    <!-- Bagian A -->
                                     <div class="bg-slate-900/50 p-6 md:p-8 rounded-3xl border border-white/10 relative overflow-hidden">
                                         <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
                                         <h4 class="text-sm font-bold text-blue-400 uppercase tracking-widest mb-6"><i class="fa-solid fa-address-card mr-2"></i>A. Data Pribadi</h4>
@@ -671,7 +597,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Bagian B -->
                                     <div class="bg-slate-900/50 p-6 md:p-8 rounded-3xl border border-white/10 relative overflow-hidden">
                                         <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
                                         <h4 class="text-sm font-bold text-purple-400 uppercase tracking-widest mb-6"><i class="fa-solid fa-graduation-cap mr-2"></i>B. Data Pendidikan</h4>
@@ -692,7 +617,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Bagian C -->
                                     <div class="bg-slate-900/50 p-6 md:p-8 rounded-3xl border border-white/10 relative overflow-hidden">
                                         <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
                                         <h4 class="text-sm font-bold text-amber-400 uppercase tracking-widest mb-6"><i class="fa-solid fa-users mr-2"></i>C. Data Orang Tua / Wali</h4>
@@ -738,7 +662,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Bagian D -->
                                     <div class="bg-slate-900/50 p-6 md:p-8 rounded-3xl border border-white/10 relative overflow-hidden">
                                         <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
                                         <h4 class="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-2"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>D. Dokumen Digital (Berkas)</h4>
@@ -767,7 +690,7 @@
                                 </form>
                             </div>
 
-                            <!-- TAB 2: STATUS PENDAFTARAN -->
+                            <!-- TAB STATUS USER -->
                             <div id="user-tab-status">
                                 <h3 class="text-xl font-bold mb-8 text-white flex items-center space-x-3 border-b border-white/10 pb-4">
                                     <div class="w-10 h-10 bg-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center text-lg"><i class="fa-solid fa-satellite-dish"></i></div>
@@ -776,7 +699,6 @@
 
                                 <div id="user-status-area" class="hidden">
                                     <div class="flex flex-col xl:flex-row gap-8 items-start">
-                                        <!-- Kolom Kiri: Foto & Status Utama -->
                                         <div class="w-full xl:w-1/3 space-y-6">
                                             <div class="text-center bg-slate-900/50 p-6 rounded-3xl border border-white/10 shadow-lg relative overflow-hidden">
                                                 <div class="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent opacity-50"></div>
@@ -792,7 +714,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- Kolom Kanan: Rincian Data Peserta -->
                                         <div class="w-full xl:w-2/3 space-y-6">
                                             <div class="bg-slate-900/50 border border-white/10 p-6 md:p-8 rounded-3xl shadow-lg">
                                                 <h3 class="text-lg md:text-xl font-bold text-white border-b border-white/10 pb-4 mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
@@ -828,7 +749,6 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Indikator Berkas -->
                                             <div class="grid grid-cols-3 gap-3 md:gap-4">
                                                 <div class="bg-indigo-900/30 border border-indigo-500/20 p-3 rounded-2xl text-center shadow-lg">
                                                     <i class="fa-solid fa-file-contract text-indigo-400 text-2xl mb-2 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)]"></i>
@@ -847,7 +767,6 @@
                                     </div>
                                 </div>
 
-                                <!-- State Kosong Jika Belum Isi Form -->
                                 <div id="user-empty-state" class="hidden flex flex-col items-center justify-center py-16 text-center">
                                     <div class="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center mb-6 shadow-inner border border-white/5">
                                         <i class="fa-solid fa-folder-open text-4xl text-slate-500"></i>
@@ -858,7 +777,7 @@
                                 </div>
                             </div>
 
-                            <!-- TAB 3: UNDUH DOKUMEN -->
+                            <!-- TAB DOKUMEN USER -->
                             <div id="user-tab-dokumen" class="hidden">
                                 <h3 class="text-xl font-bold mb-8 text-white flex items-center space-x-3 border-b border-white/10 pb-4">
                                     <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-lg flex items-center justify-center text-lg"><i class="fa-solid fa-print"></i></div>
@@ -889,26 +808,25 @@
 
             <div id="dashboard-admin" class="hidden fade-in max-w-7xl mx-auto space-y-6" data-aos="fade-up">
                 
-                <!-- Panel Header & Modul Navigasi Admin -->
                 <div class="glass-panel p-6 md:p-8 rounded-3xl shadow-lg relative overflow-hidden">
                     <div class="absolute right-0 top-0 w-64 h-64 bg-blue-600/10 rounded-full blur-[80px] pointer-events-none"></div>
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/10 pb-6 mb-6 gap-5 relative z-10">
                         <div>
-                            <h2 class="text-3xl font-extrabold text-white tracking-tight">Panel Operator Universitas</h2>
-                            <p class="text-slate-400 mt-1">Otoritas evaluasi dan validasi kelulusan berkas pendaftar.</p>
+                            <h2 class="text-3xl font-extrabold text-white tracking-tight" id="admin-panel-title">Panel Admin Universitas</h2>
+                            <p class="text-slate-400 mt-1" id="admin-panel-desc">Otoritas evaluasi dan validasi kelulusan berkas pendaftar.</p>
                         </div>
                         
-                        <!-- Navigasi Horizontal Admin -->
                         <div class="flex bg-slate-900/80 p-1.5 rounded-xl border border-white/10 shadow-inner w-full md:w-auto overflow-x-auto">
                             <button onclick="switchAdminTab('validasi')" id="nav-admin-validasi" class="px-5 py-2.5 text-sm font-bold bg-blue-600/30 text-blue-300 rounded-lg shadow-sm border border-blue-500/30 whitespace-nowrap transition-all">Validasi Berkas</button>
+                            <!-- Tab Manajemen Pengguna ini tersembunyi, hanya muncul bila yang login adalah Operator -->
+                            <button onclick="switchAdminTab('users')" id="nav-admin-users" class="hidden px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-white rounded-lg whitespace-nowrap transition-all">Manajemen Pengguna</button>
                             <button onclick="switchAdminTab('laporan')" id="nav-admin-laporan" class="px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-white rounded-lg whitespace-nowrap transition-all">Laporan Statistik</button>
                             <button onclick="switchAdminTab('pengaturan')" id="nav-admin-pengaturan" class="px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-white rounded-lg whitespace-nowrap transition-all">Pengaturan Sistem</button>
                         </div>
                     </div>
 
-                    <!-- KONTEN TAB 1: VALIDASI DATA (Existing functionality but enhanced UI) -->
+                    <!-- TAB VALIDASI DATA -->
                     <div id="admin-tab-validasi" class="relative z-10">
-                        <!-- Stats Cards Row (Summary Metrics) -->
                         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                             <div class="bg-slate-800/50 p-5 rounded-2xl border border-white/5 shadow-sm flex items-center justify-between">
                                 <div><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Total Pendaftar</p><h4 class="text-2xl font-extrabold text-white" id="stat-total">0</h4></div>
@@ -928,7 +846,6 @@
                             </div>
                         </div>
 
-                        <!-- Toolbar Aksi Tabel -->
                         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
                             <div class="relative w-full sm:w-72">
                                 <input type="text" placeholder="Cari nama atau NIK pendaftar..." class="w-full glass-input rounded-xl pl-11 pr-4 py-3 text-sm focus:ring-2 focus:ring-blue-500" onkeyup="filterAdminTable(this.value)">
@@ -939,7 +856,6 @@
                             </button>
                         </div>
 
-                        <!-- Area Tabel Data -->
                         <div class="overflow-x-auto rounded-2xl border border-white/10 shadow-lg bg-slate-900/40 backdrop-blur-sm">
                             <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
                                 <thead>
@@ -952,13 +868,43 @@
                                     </tr>
                                 </thead>
                                 <tbody id="admin-table-body" class="divide-y divide-white/5">
-                                    <!-- Injeksi Dinamis oleh JavaScript -->
+                                    <!-- Terisi otomatis oleh JS -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- KONTEN TAB 2: STATISTIK & LAPORAN -->
+                    <!-- TAB MANAJEMEN PENGGUNA (HANYA OPERATOR) -->
+                    <div id="admin-tab-users" class="hidden relative z-10">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
+                            <div class="relative w-full sm:w-72">
+                                <input type="text" placeholder="Cari nama atau email pengguna..." class="w-full glass-input rounded-xl pl-11 pr-4 py-3 text-sm focus:ring-2 focus:ring-blue-500" onkeyup="filterUserTable(this.value)">
+                                <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-500 text-lg"></i>
+                            </div>
+                            <button onclick="loadAllUsers()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-white border border-white/10 font-bold px-5 py-3 rounded-xl text-sm flex items-center justify-center space-x-2 transition shadow-md">
+                                <i class="fa-solid fa-arrows-rotate"></i> <span>Segarkan Data Pengguna</span>
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto rounded-2xl border border-white/10 shadow-lg bg-slate-900/40 backdrop-blur-sm">
+                            <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
+                                <thead>
+                                    <tr class="bg-slate-800/80 text-slate-300 uppercase text-[10px] font-bold tracking-widest border-b border-white/10">
+                                        <th class="py-4 px-6">ID</th>
+                                        <th class="py-4 px-6">Identitas Pengguna</th>
+                                        <th class="py-4 px-6">Role Saat Ini</th>
+                                        <th class="py-4 px-6">Waktu Terdaftar</th>
+                                        <th class="py-4 px-6 text-center">Eksekusi Tindakan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-users-table-body" class="divide-y divide-white/5">
+                                    <!-- Terisi otomatis oleh JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB STATISTIK & LAPORAN -->
                     <div id="admin-tab-laporan" class="hidden relative z-10 py-10">
                         <div class="flex flex-col items-center justify-center h-64 border-2 border-dashed border-slate-700 rounded-3xl text-slate-500 bg-slate-900/30">
                             <i class="fa-solid fa-chart-area text-5xl mb-4 opacity-50"></i>
@@ -967,7 +913,7 @@
                         </div>
                     </div>
 
-                    <!-- KONTEN TAB 3: PENGATURAN -->
+                    <!-- TAB PENGATURAN -->
                     <div id="admin-tab-pengaturan" class="hidden relative z-10">
                         <h3 class="text-lg font-bold text-white mb-6 border-b border-white/10 pb-4">Konfigurasi Periode Penerimaan</h3>
                         <div class="space-y-4 max-w-2xl">
@@ -994,20 +940,20 @@
         </div>
     </footer>
 
-    <!-- Script Animasi AOS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <script>
-        // Inisialisasi AOS (Animasi Scroll)
         AOS.init({ once: true, offset: 50 });
 
-        let API_URL = 'https://bagusidrwn311.pythonanywhere.com/api';
+        // Ubah ini ke URL server Python Anda (localhost jika di komputer sendiri)
+        let API_URL = 'http://127.0.0.1:5000/api';
 
         const fetchConfig = (options = {}) => ({
             ...options,
             credentials: 'include'
         });
 
+        // --- SISTEM NOTIFIKASI ---
         function showNotification(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -1032,6 +978,7 @@
             }, 3500);
         }
 
+        // --- NAVIGASI HALAMAN GUEST ---
         function switchTab(type) {
             const formLogin = document.getElementById('form-login');
             const formRegister = document.getElementById('form-register');
@@ -1051,30 +998,27 @@
             }
         }
 
-        // FUNGSI BARU: NAVIGASI KE HALAMAN LOGIN (SPA)
         function showAuthPage() {
             document.getElementById('home').classList.add('hidden');
             document.getElementById('prodi').classList.add('hidden');
             document.getElementById('alur').classList.add('hidden');
-            document.getElementById('fasilitas').classList.add('hidden'); // Sembunyikan bagian baru
-            document.getElementById('faq').classList.add('hidden');       // Sembunyikan bagian baru
+            document.getElementById('fasilitas').classList.add('hidden');
+            document.getElementById('faq').classList.add('hidden');
             
             document.getElementById('auth-box').classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // FUNGSI BARU: KEMBALI KE HALAMAN UTAMA (SPA)
         function showLandingPage() {
             const isUserLoggedIn = !document.getElementById('dashboard-user').classList.contains('hidden') || 
                                    !document.getElementById('dashboard-admin').classList.contains('hidden');
             
-            // Hanya izinkan kembali ke Beranda jika user belum berhasil login
             if (!isUserLoggedIn) {
                 document.getElementById('home').classList.remove('hidden');
                 document.getElementById('prodi').classList.remove('hidden');
                 document.getElementById('alur').classList.remove('hidden');
-                document.getElementById('fasilitas').classList.remove('hidden'); // Tampilkan bagian baru
-                document.getElementById('faq').classList.remove('hidden');       // Tampilkan bagian baru
+                document.getElementById('fasilitas').classList.remove('hidden');
+                document.getElementById('faq').classList.remove('hidden');
                 
                 document.getElementById('auth-box').classList.add('hidden');
             }
@@ -1085,14 +1029,12 @@
             const icon = document.getElementById(`faq-icon-${id}`);
             const isOpen = answer.classList.contains('open');
 
-            // Tutup semua FAQ terlebih dahulu (opsional, agar terlihat rapi)
             document.querySelectorAll('.faq-grid').forEach(el => el.classList.remove('open'));
             document.querySelectorAll('.faq-icon').forEach(el => {
                 el.classList.remove('open');
                 el.classList.remove('text-blue-400');
             });
 
-            // Jika yang diklik sebelumnya tertutup, maka buka
             if (!isOpen) {
                 answer.classList.add('open');
                 icon.classList.add('open');
@@ -1100,6 +1042,7 @@
             }
         }
 
+        // --- MANAJEMEN SESI & ROUTING DASHBOARD ---
         async function checkUserSession() {
             try {
                 const response = await fetch(`${API_URL}?action=check_session`, fetchConfig());
@@ -1110,7 +1053,6 @@
                 const dbAdmin = document.getElementById('dashboard-admin');
                 const navAuthContainer = document.getElementById('nav-auth-container');
                 
-                // Mengambil elemen-elemen halaman utama (landing page)
                 const landingHome = document.getElementById('home');
                 const landingProdi = document.getElementById('prodi');
                 const landingAlur = document.getElementById('alur');
@@ -1125,35 +1067,52 @@
                         <button onclick="handleLogout()" class="bg-rose-600/20 hover:bg-rose-600/80 text-rose-300 hover:text-white border border-rose-500/30 font-bold px-5 py-2 rounded-xl text-sm transition shadow-[0_0_10px_rgba(244,63,94,0.2)]">Logout</button>
                     `;
 
-                    // SEMBUNYIKAN BAGIAN UTAMA WEBSITE SAAT LOGIN
                     landingHome.classList.add('hidden');
                     landingProdi.classList.add('hidden');
                     landingAlur.classList.add('hidden');
+                    document.getElementById('fasilitas').classList.add('hidden');
+                    document.getElementById('faq').classList.add('hidden');
 
                     authBox.classList.add('hidden');
+
+                    // ROUTING BERDASARKAN ROLE
                     if (user.role === 'user') {
                         dbUser.classList.remove('hidden');
                         dbAdmin.classList.add('hidden');
                         document.getElementById('user-display-name').innerText = user.name;
                         loadUserApplication();
-                    } else if (user.role === 'admin') {
+                        
+                    } else if (user.role === 'admin' || user.role === 'operator') {
                         dbAdmin.classList.remove('hidden');
                         dbUser.classList.add('hidden');
-                        loadAdminApplications();
+                        
+                        if (user.role === 'operator') {
+                            document.getElementById('nav-admin-users').classList.remove('hidden');
+                            document.getElementById('admin-panel-title').innerText = "Panel Super Operator";
+                            document.getElementById('admin-panel-desc').innerText = "Kontrol penuh sistem: Validasi berkas, dan manajemen hak akses pengguna (RBAC).";
+                            loadAllUsers(); // Memuat data users khusus untuk operator
+                        } else {
+                            document.getElementById('nav-admin-users').classList.add('hidden');
+                            document.getElementById('admin-panel-title').innerText = "Panel Admin Universitas";
+                            document.getElementById('admin-panel-desc').innerText = "Otoritas evaluasi dan validasi kelulusan berkas pendaftar.";
+                        }
+                        
+                        loadAdminApplications(); // Admin dan Operator memuat ini
                     }
                 } else {
                     navAuthContainer.innerHTML = `
                         <button onclick="showAuthPage()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-[0_0_15px_rgba(79,70,229,0.5)]">Mulai Daftar</button>
                     `;
                     
-                    // KONDISI AWAL (BELUM LOGIN): TAMPILKAN HALAMAN UTAMA, SEMBUNYIKAN FORM LOGIN
                     landingHome.classList.remove('hidden');
                     landingProdi.classList.remove('hidden');
                     landingAlur.classList.remove('hidden');
-                    document.getElementById('fasilitas').classList.remove('hidden'); // Tampilkan saat awal
-                    document.getElementById('faq').classList.remove('hidden');       // Tampilkan saat awal
+                    document.getElementById('fasilitas').classList.remove('hidden');
+                    document.getElementById('faq').classList.remove('hidden');
                     
                     authBox.classList.add('hidden');
+                    dbUser.classList.add('hidden');
+                    dbAdmin.classList.add('hidden');
                 }
             } catch (error) {
                 console.error('Error Session Validation:', error);
@@ -1167,10 +1126,7 @@
             formData.append('action', type);
 
             try {
-                const response = await fetch(API_URL, fetchConfig({
-                    method: 'POST',
-                    body: formData
-                }));
+                const response = await fetch(API_URL, fetchConfig({ method: 'POST', body: formData }));
                 const result = await response.json();
 
                 if (result.success) {
@@ -1202,6 +1158,7 @@
             }
         }
 
+        // --- FITUR DASHBOARD USER (SISWA) ---
         async function loadUserApplication() {
             try {
                 const response = await fetch(`${API_URL}?action=get_user_application`, fetchConfig());
@@ -1213,7 +1170,6 @@
                 const btnCetakSKL = document.getElementById('btn-cetak-kartu');
 
                 if (result.success && result.data) {
-                    // Jika data ada, prioritaskan tab status
                     switchUserTab('status');
                     
                     const app = result.data;
@@ -1251,7 +1207,7 @@
 
                     const badge = document.getElementById('status-badge');
                     
-                    // Reset styling tombol cetak
+                    // Default State Tombol SKL (Terkunci)
                     btnCetakSKL.className = "bg-slate-900/60 p-8 rounded-3xl border border-white/10 text-center transition shadow-lg opacity-50 grayscale relative overflow-hidden cursor-not-allowed";
                     btnCetakSKL.innerHTML = `
                         <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-50"></div>
@@ -1268,7 +1224,7 @@
                         badge.className = "bg-emerald-500/20 text-emerald-300 font-bold px-5 py-4 rounded-xl text-sm border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.2)] block";
                         badge.innerHTML = "<i class='fa-solid fa-medal text-xl block mb-2 drop-shadow-md'></i> LULUS SELEKSI";
                         
-                        // Aktifkan Tombol Cetak SKL
+                        // Aktifkan Tombol Cetak SKL jika status = Diterima
                         btnCetakSKL.className = "bg-slate-900/60 p-8 rounded-3xl border border-emerald-500/30 text-center hover:border-emerald-500/60 transition shadow-[0_0_30px_rgba(16,185,129,0.15)] relative overflow-hidden";
                         btnCetakSKL.innerHTML = `
                             <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-100"></div>
@@ -1283,11 +1239,10 @@
                         badge.innerHTML = "<i class='fa-solid fa-circle-xmark text-xl block mb-2 drop-shadow-md'></i> TIDAK LULUS";
                     }
                 } else {
-                    // Belum ada data form
                     switchUserTab('form');
                     formArea.classList.remove('hidden');
                     statusArea.classList.add('hidden');
-                    emptyState.classList.remove('hidden'); // Jika buka tab status manual, tampilkan empty state
+                    emptyState.classList.remove('hidden'); 
                 }
             } catch (error) {
                 console.error('Error memuat aplikasi user:', error);
@@ -1298,16 +1253,13 @@
             event.preventDefault();
             const form = event.target;
             
-            showNotification('Proses unggah dokumen dan enkripsi sistem berjalan...', 'info');
+            showNotification('Proses unggah dokumen berjalan...', 'info');
             
             const formData = new FormData(form);
             formData.append('action', 'submit_pmb');
 
             try {
-                const response = await fetch(API_URL, fetchConfig({
-                    method: 'POST',
-                    body: formData
-                }));
+                const response = await fetch(API_URL, fetchConfig({ method: 'POST', body: formData }));
                 const result = await response.json();
 
                 if (result.success) {
@@ -1322,6 +1274,7 @@
             }
         }
 
+        // --- FITUR ADMIN DASHBOARD (VALIDASI PMB) ---
         async function loadAdminApplications() {
             try {
                 const response = await fetch(`${API_URL}?action=get_all_applications`, fetchConfig());
@@ -1333,7 +1286,6 @@
 
                 if (result.success && result.data.length > 0) {
                     result.data.forEach(app => {
-                        // Menghitung Statistik
                         countTotal++;
                         if(app.status === 'Menunggu') countMenunggu++;
                         if(app.status === 'Diterima') countTerima++;
@@ -1387,7 +1339,6 @@
                     `;
                 }
 
-                // Perbarui Angka Statistik di Admin Dashboard
                 if(document.getElementById('stat-total')) document.getElementById('stat-total').innerText = countTotal;
                 if(document.getElementById('stat-menunggu')) document.getElementById('stat-menunggu').innerText = countMenunggu;
                 if(document.getElementById('stat-terima')) document.getElementById('stat-terima').innerText = countTerima;
@@ -1405,12 +1356,8 @@
             formData.append('status', status);
 
             try {
-                const response = await fetch(API_URL, fetchConfig({
-                    method: 'POST',
-                    body: formData
-                }));
+                const response = await fetch(API_URL, fetchConfig({ method: 'POST', body: formData }));
                 const result = await response.json();
-
                 if (result.success) {
                     showNotification(result.message, 'success');
                     loadAdminApplications();
@@ -1422,6 +1369,153 @@
             }
         }
 
+        // --- FITUR MANAJEMEN PENGGUNA (KHUSUS OPERATOR) ---
+        async function loadAllUsers() {
+            try {
+                const response = await fetch(`${API_URL}?action=get_all_users`, fetchConfig());
+                const result = await response.json();
+                const tbody = document.getElementById('admin-users-table-body');
+                tbody.innerHTML = '';
+
+                if (result.success && result.data.length > 0) {
+                    result.data.forEach(u => {
+                        let badgeClass = 'bg-slate-500/20 text-slate-300 border-slate-500/30';
+                        if (u.role === 'admin') badgeClass = 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+                        if (u.role === 'operator') badgeClass = 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+                        
+                        const dateObj = new Date(u.created_at);
+                        const formattedDate = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+                        const tr = document.createElement('tr');
+                        tr.className = "hover:bg-slate-700/40 transition duration-200";
+                        tr.innerHTML = `
+                            <td class="py-4 px-6 font-mono text-slate-500">#${u.id}</td>
+                            <td class="py-4 px-6">
+                                <div class="font-bold text-white tracking-wide">${u.name}</div>
+                                <div class="text-xs text-slate-400 mt-1">${u.email}</div>
+                            </td>
+                            <td class="py-4 px-6">
+                                <span class="px-3 py-1.5 rounded-lg text-[10px] font-bold border ${badgeClass} uppercase tracking-wider shadow-inner">
+                                    ${u.role}
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-xs text-slate-400">${formattedDate}</td>
+                            <td class="py-4 px-6 text-center">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <select onchange="updateUserRole(${u.id}, this.value)" class="bg-slate-800 text-slate-300 text-xs rounded-lg px-2 py-1.5 border border-white/10 outline-none focus:border-blue-500 cursor-pointer">
+                                        <option value="" disabled selected>Ubah Role</option>
+                                        <option value="user">Jadikan User</option>
+                                        <option value="admin">Jadikan Admin</option>
+                                        <option value="operator">Jadikan Operator</option>
+                                    </select>
+                                    <button onclick="deleteUser(${u.id})" class="bg-rose-500/20 hover:bg-rose-500/50 text-rose-300 border border-rose-500/30 p-1.5 rounded-lg transition shadow-sm" title="Hapus Pengguna"><i class="fa-solid fa-trash-can w-4"></i></button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="5" class="py-10 text-center text-slate-500">Tidak ada data pengguna.</td></tr>`;
+                }
+            } catch (error) {
+                console.error('Error memuat data pengguna:', error);
+            }
+        }
+
+        async function updateUserRole(userId, newRole) {
+            const formData = new FormData();
+            formData.append('action', 'update_user_role');
+            formData.append('user_id', userId);
+            formData.append('role', newRole);
+
+            try {
+                const response = await fetch(API_URL, fetchConfig({ method: 'POST', body: formData }));
+                const result = await response.json();
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    loadAllUsers(); 
+                } else {
+                    showNotification(result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Gagal mengubah role pengguna.', 'error');
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('Apakah Anda yakin ingin menghapus akun ini secara permanen?\nPERINGATAN: Berkas pendaftaran terkait juga akan terhapus.')) return;
+            
+            const formData = new FormData();
+            formData.append('action', 'delete_user');
+            formData.append('user_id', userId);
+
+            try {
+                const response = await fetch(API_URL, fetchConfig({ method: 'POST', body: formData }));
+                const result = await response.json();
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    loadAllUsers();
+                    loadAdminApplications(); 
+                } else {
+                    showNotification(result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Gagal menghapus pengguna.', 'error');
+            }
+        }
+
+        function filterUserTable(keyword) {
+            const rows = document.querySelectorAll('#admin-users-table-body tr');
+            const lowerKey = keyword.toLowerCase();
+            rows.forEach(row => {
+                if(row.innerText.toLowerCase().includes(lowerKey)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function filterAdminTable(keyword) {
+            const rows = document.querySelectorAll('#admin-table-body tr');
+            const lowerKey = keyword.toLowerCase();
+            rows.forEach(row => {
+                if(row.innerText.toLowerCase().includes(lowerKey)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // --- PENGENDALI TAB NAVIGASI ---
+        function switchAdminTab(tabName) {
+            const tabs = ['validasi', 'users', 'laporan', 'pengaturan'];
+            tabs.forEach(tab => {
+                const el = document.getElementById(`admin-tab-${tab}`);
+                if (el) el.classList.add('hidden');
+                
+                const navBtn = document.getElementById(`nav-admin-${tab}`);
+                if (navBtn) navBtn.className = "px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-white rounded-lg whitespace-nowrap transition-all";
+            });
+
+            document.getElementById(`admin-tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`nav-admin-${tabName}`).className = "px-5 py-2.5 text-sm font-bold bg-blue-600/30 text-blue-300 rounded-lg shadow-sm border border-blue-500/30 whitespace-nowrap transition-all";
+        }
+
+        function switchUserTab(tabName) {
+            const tabs = ['status', 'form', 'dokumen'];
+            tabs.forEach(tab => {
+                document.getElementById(`user-tab-${tab}`).classList.add('hidden');
+                const navBtn = document.getElementById(`nav-user-${tab}`);
+                navBtn.className = "w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-white font-medium transition text-sm";
+            });
+
+            document.getElementById(`user-tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`nav-user-${tabName}`).className = "w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl bg-blue-600/20 text-blue-400 font-bold transition text-sm border border-blue-500/30 shadow-inner";
+        }
+
+        // --- ANIMASI GUIDE INTERAKTIF ---
         let currentStep = 1;
         let walkthroughInterval;
 
@@ -1478,54 +1572,7 @@
             }, 4500);
         }
 
-        
-        // Fitur Pencarian Tabel Admin (Filter Dinamis HTML)
-        function filterAdminTable(keyword) {
-            const rows = document.querySelectorAll('#admin-table-body tr');
-            const lowerKey = keyword.toLowerCase();
-            rows.forEach(row => {
-                // Mengecek teks yang ada di dalam elemen <tr> (termasuk Nama, Email, Prodi, NIK)
-                if(row.innerText.toLowerCase().includes(lowerKey)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        // Pengendali Tab untuk Admin Dashboard
-        function switchAdminTab(tabName) {
-            const tabs = ['validasi', 'laporan', 'pengaturan'];
-            
-            tabs.forEach(tab => {
-                // Sembunyikan semua panel
-                document.getElementById(`admin-tab-${tab}`).classList.add('hidden');
-                
-                // Reset style tombol navigasi ke mode tidak aktif
-                const navBtn = document.getElementById(`nav-admin-${tab}`);
-                navBtn.className = "px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-white rounded-lg whitespace-nowrap transition-all";
-            });
-
-            // Tampilkan panel yang dipilih dan setel style tombol aktif
-            document.getElementById(`admin-tab-${tabName}`).classList.remove('hidden');
-            document.getElementById(`nav-admin-${tabName}`).className = "px-5 py-2.5 text-sm font-bold bg-blue-600/30 text-blue-300 rounded-lg shadow-sm border border-blue-500/30 whitespace-nowrap transition-all";
-        }
-
-        // Pengendali Tab untuk User Dashboard
-        function switchUserTab(tabName) {
-            const tabs = ['status', 'form', 'dokumen'];
-            
-            tabs.forEach(tab => {
-                document.getElementById(`user-tab-${tab}`).classList.add('hidden');
-                
-                const navBtn = document.getElementById(`nav-user-${tab}`);
-                navBtn.className = "w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-white font-medium transition text-sm";
-            });
-
-            document.getElementById(`user-tab-${tabName}`).classList.remove('hidden');
-            document.getElementById(`nav-user-${tabName}`).className = "w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl bg-blue-600/20 text-blue-400 font-bold transition text-sm border border-blue-500/30 shadow-inner";
-        }
-
+        // --- INISIALISASI HALAMAN AWAL ---
         document.addEventListener('DOMContentLoaded', () => {
             checkUserSession();
             startAutoWalkthrough(); 
