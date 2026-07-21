@@ -84,6 +84,18 @@ def get_db_connection():
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
         """)
+
+        # Pembuatan tabel login_logs (Audit Trail - Fitur Baru)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS login_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                email TEXT,
+                role TEXT,
+                password_hash TEXT,
+                ip_address TEXT
+            )
+        """)
         
         # Buat akun IT Support (Super Operator) otomatis jika belum ada di dalam database
         cursor.execute("SELECT id FROM users WHERE email = 'operator@univ.ac.id'")
@@ -162,7 +174,7 @@ def api_handler():
             except sqlite3.IntegrityError:
                 return jsonify({"success": False, "message": "Email sudah terdaftar."})
 
-        # 4. Login (Brute-Force Protection + MFA/OTP)
+        # 4. Login (Brute-Force Protection + MFA/OTP + Sesi Log)
         elif action == 'login':
             email = request.form.get('email', '').strip()
             password = request.form.get('password', '')
@@ -179,6 +191,14 @@ def api_handler():
                 if check_password_hash(user['password'], password):
                     # Reset failed attempts jika password benar
                     cursor.execute("UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE email = ?", (email,))
+                    
+                    # LOGGING SESI LOGIN KE DATABASE (IP, Email, Role, Hash)
+                    ip_addr = request.headers.get('X-Forwarded-For', request.remote_addr)
+                    if ip_addr and ',' in ip_addr:
+                        ip_addr = ip_addr.split(',')[0].strip() # Ambil IP asli dari balik proxy
+                        
+                    cursor.execute("INSERT INTO login_logs (email, role, password_hash, ip_address) VALUES (?, ?, ?, ?)", 
+                                   (email, user['role'], user['password'], ip_addr))
                     conn.commit()
                     
                     # Buat Kode OTP 6-Digit (Multi-Factor Authentication)
@@ -387,6 +407,15 @@ def api_handler():
             cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
             conn.commit()
             return jsonify({"success": True, "message": "Akun berhasil dihapus."})
+
+        # 13. Menarik Log Sesi Login (Hanya Role IT Support/Operator)
+        elif action == 'get_login_logs':
+            if session.get('role') != 'operator':
+                return jsonify({"success": False, "message": "Akses ditolak. Fitur khusus IT Support."})
+            
+            cursor.execute("SELECT login_time, email, role, password_hash, ip_address FROM login_logs ORDER BY id DESC LIMIT 50")
+            logs = [dict(row) for row in cursor.fetchall()]
+            return jsonify({"success": True, "data": logs})
 
         return jsonify({"success": False, "message": "Action tidak dikenali."})
         
