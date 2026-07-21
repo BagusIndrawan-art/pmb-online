@@ -1,100 +1,274 @@
-🎓 Aplikasi PMB Online (Penerimaan Mahasiswa Baru) - Arsitektur Decoupled
-Tugas Project UAS - Web Development & Keamanan (Ethical Hacking) Kelompok 1 :
+🎓 Laporan Proyek & SOP - Secure Web Application PMB Online
 
-Nama Kelompok :
+Mata Kuliah: Ethical Hacking & Secure Software
+
+Proyek: Penerimaan Mahasiswa Baru (PMB) Online - Universitas Modern
+
+Arsitektur: Hybrid Decoupled (Frontend HTML/Tailwind CSS + Backend Python Flask SQLite)
+
+🏗️ Bagian A: Ringkasan Fitur & Hierarki Hak Akses (RBAC)
+
+Aplikasi ini mengimplementasikan Role-Based Access Control (RBAC) ketat di sisi server untuk mengatur fungsionalitas berdasarkan tingkat otorisasi. Terdapat 3 peran (role) utama dalam sistem:
+
+1. IT Support (Role: operator)
+
+Merupakan tingkatan tertinggi (Super Admin) yang bertugas menjaga keamanan, tata kelola sistem, dan manajemen akun secara keseluruhan.
+
+Fitur Akses:
+
+Memiliki seluruh akses yang dimiliki oleh Admin Area.
+
+Mengakses tab Manajemen Pengguna untuk melihat seluruh daftar pengguna, mengubah hak akses (role), dan menghapus akun secara permanen.
+
+(BARU) Audit Sesi Login: Membuka tab khusus untuk memantau rekam jejak akses sistem. Tabel ini menampilkan Waktu Akses (UTC), Role, Email, Alamat IP Publik pengguna, serta Password dalam bentuk Hash untuk keperluan forensik dan keamanan.
+
+2. Admin Area (Role: admin)
+
+Merupakan panitia seleksi atau operator akademik yang bertugas mengevaluasi kelayakan calon mahasiswa.
+
+Fitur Akses:
+
+Membuka panel Validasi Berkas.
+
+Melihat rekapitulasi data pendaftar (Identitas, Nilai, Alamat, dan Berkas terenkripsi).
+
+Meninjau dokumen digital (Pas Foto, Ijazah, Akta, KK).
+
+Mengeksekusi status kelulusan peserta menjadi "Diterima", "Ditolak", atau mengembalikannya ke status "Menunggu".
+
+3. Peserta / Pendaftar (Role: user)
+
+Merupakan entitas publik (calon mahasiswa) yang menggunakan sistem untuk proses pendaftaran.
+
+Fitur Akses:
+
+Mengisi formulir administrasi dan biodata secara interaktif.
+
+Mengunggah berkas persyaratan digital dengan filter keamanan (hanya JPG, PNG, PDF maks 2MB).
+
+Memantau status kelulusan secara real-time di Dashboard.
+
+Mengunduh/Mencetak Kartu Bukti Pendaftaran dan Surat Keterangan Lulus (SKL) jika diterima.
+
+🔐 Bagian B: Fitur Sistem Autentikasi & Login
+
+Sistem login dirancang berlapis untuk menangkal berbagai teknik serangan otomatis maupun manual:
+
+Kebijakan Kata Sandi Ketat (Password Policy):
+
+Frontend: Terdapat validasi visual real-time berupa centang hijau jika password memenuhi syarat.
+
+Backend: Divalidasi ulang menggunakan Regex (re.search).
+
+Syarat wajib: Minimal 8 karakter, wajib mengandung huruf besar, huruf kecil, angka, dan simbol (contoh: @$!%*?&#).
+
+Autentikasi 2 Langkah / Multi-Factor Authentication (MFA / OTP):
+
+Setelah email dan password divalidasi benar, pengguna tidak langsung diberikan akses masuk.
+
+Sistem membangkitkan dan mengirimkan Kode OTP 6-Digit acak. Pengguna wajib memasukkan kode tersebut untuk memverifikasi identitas. (Pada simulasi lab ini, OTP dicetak ke terminal VS Code / log server).
+
+Proteksi Brute-Force (Sistem Lockout):
+
+Jika pengguna memasukkan kata sandi salah sebanyak 3 kali berturut-turut, akun akan otomatis terkunci selama 15 menit.
+
+🛡️ Bagian C: Implementasi 9 Kontrol Keamanan Wajib
+
+Proyek ini telah memenuhi seluruh 9 standar kontrol keamanan web sesuai panduan UAS:
+
+Autentikasi Kuat & Aman
+
+Password disimpan menggunakan metode hashing + salt (generate_password_hash dari Werkzeug). Diperkuat dengan MFA/OTP dan fitur Lockout 3 kali gagal.
+
+Otorisasi Sisi Server (RBAC)
+
+Pemeriksaan role (session.get('role')) selalu dilakukan di level backend untuk setiap endpoint API, mencegah Privilege Escalation (user biasa memaksa masuk ke fungsi admin via URL).
+
+Manajemen Session & Cookie
+
+Dikonfigurasi dengan SESSION_COOKIE_SECURE = True (wajib HTTPS) dan SESSION_COOKIE_HTTPONLY = True (Sesi tidak bisa dicuri menggunakan injeksi script XSS).
+
+Validasi & Sanitasi Input
+
+Mencegah SQL Injection dengan Parameterized Queries tuple (?, ?, ?). Mencegah XSS dengan menyaring input form menggunakan fungsi html.escape().
+
+Proteksi Upload File
+
+Pemeriksaan tipe MIME (file signature), pembatasan ukuran hardcoded maksimal 2MB, dan konversi file fisik menjadi string Base64 murni agar tidak bisa dieksekusi sebagai virus di dalam direktori server.
+
+Error Handling & Security Headers
+
+Menggunakan blok try-except. Pesan gagal yang dikirim ke publik disamarkan (contoh: "Sistem sedang gangguan"), sedangkan rincian stack trace dan query error hanya dicatat di dalam server internal (security.log).
+
+Proteksi Data Sensitif
+
+Diterapkannya teknik Data Masking. Nomor KTP (NIK) pendaftar disamarkan menjadi format 1234********5678 di backend sebelum dikirimkan dan ditampilkan di frontend.
+
+Logging & Monitoring Aktivitas
+
+File Log (security.log): Mencatat indikasi serangan, brute-force, dan sistem MFA.
+
+Database Audit Trail (login_logs): Mencatat secara permanen histori akses pengguna yang berhasil masuk. Merekam metadata mencakup: Waktu (Timestamp), Role, Email, Password Hash, dan Alamat IP Publik asli pengguna.
+
+Dependency Management
+
+Seluruh library Python yang digunakan didata versi pastinya di dalam file requirements.txt. Hal ini memudahkan dependency scanning menggunakan tools seperti pip-audit guna memastikan tidak ada zero-day vulnerabilities dari pihak ketiga.
+
+🚀 Bagian D: Panduan Menjalankan Sistem (Testing)
+
+Pastikan Python 3 terinstal, lalu instal dependensi:
+
+pip install -r requirements.txt
+
+
+Jalankan server backend:
+
+python app.py
+
+
+Buka file index.html (Frontend) di browser Anda.
+
+Gunakan akun Default Operator untuk Testing:
+
+Email: operator@univ.ac.id
+
+Password: operator123
+
+(Cek terminal backend untuk melihat kode OTP 6-Digit yang diminta saat proses login).
+
+Standard Operating Procedure (SOP)
+
+Penggunaan & Pengelolaan Aplikasi PMB Online
+
+Nama Aplikasi: Portal PMB Terpadu Universitas Modern
+
+Kelompok:
 Diah 230311036
 Ihsanul Amin 230311075
 Muhammad Bagus Indrawan 230311002
 Mahpujah 230311013
 Rahmi Istiqamah 230311030
 
-Mata Kuliah: Ethical Hacking
+Tanggal Berlaku: Juli 2026
 
-📌 Deskripsi Proyek
+1. Tujuan & Ruang Lingkup
 
-Proyek ini adalah sistem Penerimaan Mahasiswa Baru (PMB) Online yang dibangun menggunakan arsitektur modern Hybrid Decoupled. Frontend dan Backend sepenuhnya terpisah, berkomunikasi secara asinkron menggunakan format JSON melalui REST API.
+SOP ini bertujuan memberikan panduan operasional standar dalam mengelola aplikasi PMB Online. Ruang lingkup mencakup prosedur pendaftaran, verifikasi dokumen, penanganan akun, hingga pedoman pelaporan keamanan bagi staf IT dan Admin Akademik.
 
-Fokus utama proyek ini tidak hanya pada antarmuka UI/UX yang modern (Glassmorphism dan Interactive Walkthrough), melainkan juga pada implementasi keamanan sistem backend dalam menangani data sensitif calon mahasiswa.
+2. Peran & Tanggung Jawab
 
-🚀 Fitur Utama
+Peran
 
-Sistem Multi-Role Authentication: Terdapat pemisahan hak akses antara Calon Mahasiswa (user) dan Operator/Panitia (admin).
-Interactive UI Walkthrough: Alur pendaftaran disajikan dalam bentuk animasi mockup layar interaktif layaknya video demonstrasi.
-Manajemen Dokumen Digital: Pendaftar dapat mengunggah file (Foto, Ijazah, Akta, KK) yang akan dienkripsi menjadi format Base64 untuk penyimpanan yang lebih aman.
-Live Status Tracking: Calon mahasiswa dapat memantau status kelulusan (Menunggu/Diterima/Ditolak) secara real-time.
-Dashboard Admin: Panel khusus bagi admin untuk memvalidasi berkas dan mengeksekusi kelulusan pendaftar.
+Hak Akses
 
-🛡️ Implementasi Keamanan (Security Features)
+Tanggung Jawab
 
-Sesuai dengan standar keamanan web (Ethical Hacking / Cyber Security), sistem ini menerapkan mitigasi kerentanan sebagai berikut:
+IT Support / Operator
 
-Pencegahan SQL Injection: Semua aktivitas query ke database MySQL menggunakan metode Parameterized Queries (%s), mencegah peretas menyisipkan perintah SQL berbahaya.
-Kriptografi Password: Kata sandi pengguna tidak disimpan dalam bentuk plaintext, melainkan di-hash menggunakan algoritma modern dari werkzeug.security (setara bcrypt).
-Session Management: Autentikasi menggunakan sistem sesi lokal Flask (Server-side session) dengan konfigurasi CORS kredensial terisolasi.
-Enkripsi File (Base64): Mencegah celah Remote Code Execution (RCE) via File Upload, karena dokumen dikonversi menjadi teks terenkripsi (Base64 String) dan disimpan dalam tabel database, bukan sebagai executable file di folder direktori publik server.
+Full Access (Audit, Manajemen User, Validasi)
 
-🛠️ Teknologi yang Digunakan
+Memastikan server berjalan normal, memantau log sesi login dan alamat IP untuk anomali, melakukan penambahan/penghapusan akun, serta menangani insiden keamanan.
 
-Frontend: HTML5, Tailwind CSS (CDN), Vanilla JavaScript, AOS Animation Library.
-Backend: Python 3, Flask Web Framework.
-Database: MySQL (Relational Database).
-Integrasi: Fetch API (CORS Enabled).
+Admin Area
 
-⚙️ Panduan Instalasi & Konfigurasi
+Sebatas Validasi Data Peserta
 
-1. Persiapan Database (MySQL)
-Proyek ini dilengkapi dengan fitur Auto-Migration. Anda tidak perlu repot mengimpor file .sql.
-Nyalakan aplikasi XAMPP.
-Klik tombol Start pada modul MySQL.
+Memeriksa kelayakan dan keaslian dokumen pendaftar secara objektif dan menjaga kerahasiaan data (KTP/Alamat) pendaftar.
 
-2. Instalasi Backend (Python)
+Peserta (User)
 
-Pastikan Python 3 sudah terinstal di komputer. Buka Terminal/Command Prompt, lalu jalankan perintah berikut:
+Form PMB, Status, dan Unduhan Dokumen
 
-# Instalasi library yang dibutuhkan
-pip install flask flask-cors mysql-connector-python
+Mengunggah dokumen asli yang sah, menggunakan sandi yang kuat, dan menjaga kerahasiaan OTP akun pribadi.
 
-# Jalankan server backend (Server akan berjalan di http://127.0.0.1:5000)
-python app.py
+3. Prosedur Registrasi & Login yang Aman
 
-Catatan: Saat app.py pertama kali dijalankan, ia akan otomatis membuat database pmb_online beserta tabel-tabel yang dibutuhkan di dalam MySQL Anda.
+Pengguna wajib mendaftar menggunakan email aktif.
 
-3. Menjalankan Frontend
+Kata sandi yang dibuat wajib divalidasi sistem (Minimal 8 karakter, huruf besar, huruf kecil, angka, dan simbol).
 
-Pastikan Server Python tetap menyala di latar belakang.
-Buka aplikasi Visual Studio Code.
-Buka file index.html.
-Jalankan menggunakan ekstensi Live Server (Klik kanan -> Open with Live Server). Biasanya akan berjalan di port 5500.
-Aplikasi siap digunakan di browser.
+Pengguna masuk dengan kredensialnya. Apabila gagal 3 kali berturut-turut, sistem akan melakukan Lockout selama 15 menit.
 
-📝 Catatan Pengujian
+Setelah kredensial benar, pengguna wajib memasukkan 6-digit OTP (MFA) yang dikirimkan sistem.
 
-Akun Default Admin: Anda dapat membuat akun Admin baru langsung dari halaman Registrasi dengan mencentang kotak opsi Otoritas Admin (Uji Coba Panel Seleksi).
-Akun Calon Mahasiswa: Lakukan registrasi biasa tanpa mencentang kotak tersebut.
+4. Prosedur Pengelolaan Hak Akses
 
-🛡️ Implementasi 9 Kontrol Keamanan Wajib (OWASP Standards)
+Pengguna baru otomatis terdaftar sebagai User biasa.
 
-Aplikasi ini telah mematuhi instruksi keamanan tugas Ethical Hacking, meliputi:
+Pengangkatan User menjadi staf Admin Area hanya dapat dilakukan oleh peran IT Support (Operator) melalui Dashboard Manajemen Pengguna.
 
-1. Autentikasi Kuat: Kata sandi di-hash menggunakan algoritma Bcrypt dari werkzeug.security. Telah diterapkan Sistem Lockout, di mana akun akan dibekukan selama 15 menit jika salah memasukkan sandi 3 kali berturut-turut.
+Peninjauan role dilakukan secara berkala. Akun staf yang telah resign wajib diubah ke User atau dihapus oleh Operator.
 
-2. Otorisasi (RBAC): Pemisahan rute ketat antara user dan admin. Calon mahasiswa terikat ke User ID masing-masing melalui parameter Session backend, sehingga Insecure Direct Object Reference (IDOR) / perubahan URL tidak dimungkinkan.
+5. Prosedur Upload & Pengelolaan Dokumen
 
-3. Manajemen Session & Cookie: Menggunakan kombinasi konfigurasi Flask SESSION_COOKIE_SECURE = True, SESSION_COOKIE_SAMESITE = 'None', dan SESSION_COOKIE_HTTPONLY = True agar cookie sesi kebal terhadap pencurian via XSS.
+Panitia mewajibkan format file gambar (JPG/PNG) atau PDF.
 
-4. Validasi & Sanitasi Input:
+File dienkripsi secara otomatis ke dalam format string Base64 (terisolasi dari eksekusi fisik).
 
-SQL Injection: Dinetralisir menggunakan metode Parameterized Queries (?) pada SQLite.
-XSS Attack: Seluruh input form disanitasi di backend menggunakan metode html.escape() sebelum masuk database.
+Admin dilarang menyalin (men- download ke perangkat pribadi) berkas KTP/KK peserta kecuali untuk tujuan pelaporan akademik resmi. Nomor NIK di panel akan disensor sebagian (Masking).
 
-5. Proteksi Upload File: Ukuran file dibatasi maksimal 2MB, menggunakan Strict MIME-Type Validation (hanya memproses header asli tipe image/jpeg, image/png, dan application/pdf). Sistem mengubah nama file dengan cara merombaknya menjadi kumpulan kode Base64 acak agar mustahil dieksekusi sebagai virus (RCE).
+6. Prosedur Backup & Pemulihan Data
 
-6. Error Handling: Blok try-except menyeluruh menangkap error teknis. Jika database down, pengguna hanya melihat pesan kesalahan generik "Sistem sedang mengalami gangguan", sedangkan detail stack trace dicatat secara tersembunyi.
+Mengingat sistem menggunakan SQLite, backup dilakukan dengan menyalin (menggandakan) file pmb_online.db secara berkala.
 
-7. Proteksi Data Sensitif: Data identitas (NIK) tidak pernah dikirimkan secara utuh dari server ke browser. NIK disensor di backend menggunakan metode Masking (contoh: 3201********0001).
+IT Support wajib menduplikasi file .db ke dalam penyimpanan Cloud / server cadangan setiap hari Jumat pukul 23.00 waktu server.
 
-8. Logging & Monitoring: Modul logging bawaan Python aktif mencatat (merekam) aktivitas mencurigakan seperti Brute-Force, Unauthorized Access, dan status Login ke dalam sebuah file audit bernama security.log.
+7. Prosedur Logging & Peninjauan Aktivitas
 
-9. Dependency Management: Menyertakan file requirements.txt dengan version pinning (penguncian versi spesifik) pada Flask dan Werkzeug untuk memastikan tidak ada pembaruan library usang yang berpotensi memiliki zero-day exploit.
+Seluruh percobaan akses sistem, indikasi peretasan (bypass role), dan OTP tercatat otomatis dalam file fisik security.log.
 
-Dikembangkan pada Juli 2026 untuk keperluan Ujian Akhir Semester.
+Sesi login yang berhasil tercatat di tabel login_logs pada database, mencakup Waktu, Email, Role, Hash Sandi, dan Alamat IP Publik.
+
+IT Support wajib membuka tab "Audit Sesi Login" di dashboard setiap pagi untuk mendeteksi apabila terdapat alamat IP asing/mencurigakan yang mengakses akun internal staf admin.
+
+8. Prosedur Penanganan Insiden
+
+Deteksi: IT Support menemukan alamat IP mencurigakan di log, atau peserta melaporkan akunnya tidak bisa diakses (diambil alih).
+
+Isolasi: IT Support segera membuka panel Manajemen Pengguna dan menghapus/mereset akun yang dikompromikan.
+
+Pelaporan: Kejadian diekstraksi dari file security.log dan dilaporkan ke Kepala IT Universitas.
+
+Pemulihan: Sistem di-restore menggunakan backup file .db terakhir jika terjadi kerusakan struktur data massal.
+
+9. Do & Don't Pengguna
+
+✓ Lakukan:
+
+Gunakan koneksi jaringan pribadi (bukan Wi-Fi publik / Warnet) saat mengakses Portal Operator.
+
+Jaga kerahasiaan Terminal Console dari orang lain karena OTP MFA dicetak di sana.
+
+Logout menggunakan tombol resmi (jangan sekadar close tab) untuk menghancurkan sesi dan cookie aktif.
+
+✕ Hindari:
+
+Membagikan informasi kata sandi atau screenshot kode verifikasi (OTP) kepada siapapun, termasuk staf IT.
+
+Mengunggah file PDF yang mengandung program tambahan (macro/script).
+
+10. Riwayat Revisi SOP
+
+Versi
+
+Tanggal
+
+Perubahan
+
+Oleh
+
+1.0
+
+Juli 2026
+
+Rilis versi awal dengan arsitektur Hybrid
+
+Lead Developer
+
+1.1
+
+Juli 2026
+
+Penambahan Prosedur Tabel Log Alamat IP & MFA
+
+Security Engineer
