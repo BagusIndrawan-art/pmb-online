@@ -1707,22 +1707,6 @@
             });
         }
 
-<comment-tag id="1">        function switchAdminTab(tabName) {
-            const tabs = ['validasi', 'users', 'logs', 'laporan', 'pengaturan'];
-            tabs.forEach(tab => {
-                const el = document.getElementById(`admin-tab-${tab}`);
-                if (el) el.classList.add('hidden');
-                
-                const navBtn = document.getElementById(`nav-admin-${tab}`);
-                if (navBtn) navBtn.className = "px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-white rounded-lg whitespace-nowrap transition-all";
-            });
-
-            document.getElementById(`admin-tab-${tabName}`).classList.remove('hidden');
-            document.getElementById(`nav-admin-${tabName}`).className = "px-5 py-2.5 text-sm font-bold bg-blue-600/30 text-blue-300 rounded-lg shadow-sm border border-blue-500/30 whitespace-nowrap transition-all";
-        }</comment-tag id="1" text="Bug ini terjadi karena fungsi switchAdminTab menimpa seluruh class atribut saat sebuah tab diklik, sehingga class 'hidden' ikut terhapus. Kita perlu mengubahnya agar hanya mengubah class yang spesifik untuk warna (menggunakan classList.add dan classList.remove), sehingga class 'hidden' tetap aman untuk role Admin.
-
-    Ganti fungsi ini menjadi:
-
         function switchAdminTab(tabName) {
             const tabs = ['validasi', 'users', 'logs', 'laporan', 'pengaturan'];
             tabs.forEach(tab => {
@@ -1731,6 +1715,7 @@
                 
                 const navBtn = document.getElementById(`nav-admin-${tab}`);
                 if (navBtn) {
+                    // Hanya hapus class warna aktif, JANGAN gunakan className = "..." agar class 'hidden' tetap aman
                     navBtn.classList.remove('font-bold', 'bg-blue-600/30', 'text-blue-300', 'shadow-sm', 'border', 'border-blue-500/30');
                     navBtn.classList.add('font-medium', 'text-slate-400');
                 }
@@ -1739,10 +1724,11 @@
             document.getElementById(`admin-tab-${tabName}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`nav-admin-${tabName}`);
             if (activeBtn) {
+                // Tambahkan class warna aktif untuk tab yang sedang diklik
                 activeBtn.classList.remove('font-medium', 'text-slate-400');
                 activeBtn.classList.add('font-bold', 'bg-blue-600/30', 'text-blue-300', 'shadow-sm', 'border', 'border-blue-500/30');
             }
-        }" type="suggestion">
+        }
 
         function switchUserTab(tabName) {
             const tabs = ['status', 'form', 'dokumen'];
